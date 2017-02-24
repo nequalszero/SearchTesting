@@ -89,7 +89,7 @@ def batch_seed_sleeping_bags
       Product.import batches[:products]
       TagName.import batches[:tag_names]
       Tag.import batches[:tags]
-      counts[:products], counts[:tags] = 0, 0
+      counts[:tags] = 0
       batches[:products], batches[:tag_names], batches[:tags] = [], [], []
     end
   }
