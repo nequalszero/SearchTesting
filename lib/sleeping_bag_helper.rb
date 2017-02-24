@@ -107,6 +107,7 @@ end
 def seed_sleeping_bags(type = :down, &prc)
   prc ||= Proc.new { |params| Product.create_new_product(params) }
   brands = type == :down ? DOWN_SB_BRANDS : SYNTH_SB_BRANDS
+  puts "Seeding #{type} sleeping bags."
 
   brands.each do |brand|
     # Generate 1-10 models for a brand

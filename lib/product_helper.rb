@@ -85,7 +85,8 @@ def batch_seed_sleeping_bags
     end
 
     if counts[:tags] >= batch_size
-      puts "Inserting batch"
+      new_records = batches.map {|_, val| val.length}.inject { |accum, i| accum + i }
+      puts "Inserting batch: #{new_records} records"
       Product.import batches[:products]
       TagName.import batches[:tag_names]
       Tag.import batches[:tags]
@@ -95,7 +96,10 @@ def batch_seed_sleeping_bags
   }
 
   seed_sleeping_bags(&batch_proc)
-  puts "Last batch, new_tags: #{counts[:tags]}"
+  seed_sleeping_bags(:synthetic, &batch_proc)
+
+  new_records = batches.map {|_, val| val.length}.inject { |accum, i| accum + i }
+  puts "Last batch: #{new_records} records"
   Product.import batches[:products]
   TagName.import batches[:tag_names]
   Tag.import batches[:tags]
