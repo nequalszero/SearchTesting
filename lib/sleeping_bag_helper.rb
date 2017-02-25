@@ -14,6 +14,7 @@ Mountain Equipment
 Mountain Hardwear
 NEMO Equipment Inc.
 Rab
+REI
 Sea To Summit
 Sierra Designs
 The North Face
@@ -41,6 +42,7 @@ Mountainsmith
 NEMO Equipment Inc.
 Poler
 Rab
+REI
 Sea To Summit
 Selk'bag USA, Inc.
 Sierra Designs
@@ -59,7 +61,7 @@ def down_sb_adjectives(fill_power, temp)
 end
 
 def synthetic_sb_adjectives(temp, insulation_type)
-  keywords = [insulation_type, "Synthetic", "Sleeping", "Bag"]
+  keywords = [*insulation_type.split(" "), "Synthetic", "Sleeping", "Bag"]
   keywords.concat(["Mountaineering", "Expedition", "4-Season", "Waterproof", "Water-Resistant", "Gore-Tex"]) if temp <= 0
   keywords << ((rand() > 0.5) ? "Backpacking" : "Camping") if temp > 0
   keywords
@@ -67,6 +69,19 @@ end
 
 SB_INSULATIONS = ["Coreloft", "Primaloft Infinity", "Polarguard Delta", "Stratofiber", "Thermaloft", "Heatseeker Pro", "Heatseeker Eco"]
 SB_TEMPERATURES = [-40, -30, -20, -15, -10, 0, 5, 10, 15, 20, 25, 30, 35, 40]
+
+def extra_sleeping_bag_keywords(params)
+  raise "sleeping_bag_helper#extra_sleeping_bag_keywords - Error missing params[:type]" unless params[:type]
+
+  case params[:type]
+  when :down_sb
+    down_sb_adjectives(params[:fill_power], params[:temp])
+  when :synthetic_sb
+    synthetic_sb_adjectives(params[:temp], params[:insulation_type])
+  else
+    raise "Error missing params[:type]" unless params[:type]
+  end
+end
 
 def seed_one_sleeping_bag(&prc)
   prc ||= Proc.new { |params| Product.create_new_product(params) }
@@ -86,19 +101,9 @@ def seed_one_sleeping_bag(&prc)
   options[:fill_power] = fill_power if type == :down
   options[:insulation_type] = insulation_type if type == :synthetic
 
-  extras = extra_keywords(options)
+  extras = extra_sleeping_bag_keywords(options)
 
-  keywords = [brand, model_name, temp.to_s, color, *extras]
-  name = keywords.join(" ")
-  keywords_hash = {}
-  keywords.each { |kw| keywords_hash[kw] = true}
-
-  params = {
-    name: name,
-    keywords_hs: keywords_hash,
-    keywords_arr: name.downcase.split(" "),
-    keywords_jsonb: keywords_hash
-  }
+  params = create_product_params([brand, model_name, temp.to_s, color, *extras])
 
   prc.call(params)
 end
@@ -107,7 +112,7 @@ end
 def seed_sleeping_bags(type = :down, &prc)
   prc ||= Proc.new { |params| Product.create_new_product(params) }
   brands = type == :down ? DOWN_SB_BRANDS : SYNTH_SB_BRANDS
-  puts "Seeding #{type} sleeping bags."
+  puts "\nSeeding #{type} sleeping bags."
 
   brands.each do |brand|
     # Generate 1-10 models for a brand
@@ -115,7 +120,7 @@ def seed_sleeping_bags(type = :down, &prc)
       model_name = random_model_name()
 
       # Generate 1-4 colors for the model
-      colors = COLORS.shuffle.take(rand(1..4))
+      colors = pick_colors(rand(1..4))
 
       # Create 1-3 temperature ratings for the model
       temps = [SB_TEMPERATURES.sample]
@@ -132,21 +137,11 @@ def seed_sleeping_bags(type = :down, &prc)
       }
       options[:fill_power] = fill_power if type == :down
       options[:insulation_type] = insulation_type if type == :synthetic
-      extras = extra_keywords(options)
+      extras = extra_sleeping_bag_keywords(options)
 
       temps.each do |temp|
         colors.each do |color|
-          keywords = [brand, model_name, temp.to_s, color, *extras]
-          name = keywords.join(" ")
-          keywords_hash = {}
-          keywords.each { |kw| keywords_hash[kw] = true}
-
-          params = {
-            name: name,
-            keywords_hs: keywords_hash,
-            keywords_arr: name.downcase.split(" "),
-            keywords_jsonb: keywords_hash
-          }
+          params = create_product_params([brand, model_name, temp.to_s, color, *extras])
 
           prc.call(params)
         end

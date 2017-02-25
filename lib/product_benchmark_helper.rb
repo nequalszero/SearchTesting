@@ -29,6 +29,23 @@ def test_search_methods(num_keywords_per_group = 1, num_groups = TagName.count)
   enable_activerecord_sql_logging()
 end
 
+def search_for_products(num_products = 1000)
+  disable_activerecord_sql_logging()
+  keywords_arrays = Product.all.pluck(:keywords_arr).shuffle.take(num_products)
+
+  puts "\nBenchmark for performing search for #{num_products} products:"
+  puts "Sample query: #{keywords_arrays.first}", ""
+
+  Benchmark.bmbm do |x|
+    x.report("by relation:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags(*kw_arr) } }
+    x.report("by jsonb:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_jsonb(kw_arr) }  }
+    x.report("by hstore:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_hstore(kw_arr) }  }
+    x.report("by array:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_array(kw_arr) }  }
+  end
+
+  enable_activerecord_sql_logging()
+end
+
 def test_seed_speed(num_products = 1)
   puts "\nBenchmark for seeding #{num_products} products"
 
@@ -39,4 +56,8 @@ def test_seed_speed(num_products = 1)
   end
 
   enable_activerecord_sql_logging()
+end
+
+def explain_relation_search(keywords)
+
 end

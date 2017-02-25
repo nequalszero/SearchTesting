@@ -57,7 +57,7 @@ class Product < ActiveRecord::Base
   end
 
   def self.select_products_by_tags(*keywords)
-    products = Product.find_by_sql([<<-SQL, keywords, keywords.count])
+    Product.find_by_sql([<<-SQL, keywords, keywords.count])
       SELECT
         *
       FROM
