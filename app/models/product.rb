@@ -56,6 +56,10 @@ class Product < ActiveRecord::Base
     product = Product.create_new_product(params)
   end
 
+  # Takes many strings as an argument or a splatted array, e.g.
+  # => Product.select_products_by_tags("the", "north", "face")      or
+  # => Product.select_products_by_tags(*["the", "north", "face"])   or
+  # => Product.select_products_by_tags(*"the north face".split(" "))
   def self.select_products_by_tags(*keywords)
     Product.find_by_sql([<<-SQL, keywords, keywords.count])
       SELECT
@@ -74,28 +78,60 @@ class Product < ActiveRecord::Base
         COUNT(*) = ?
     SQL
   end
-  # def self.select_products_by_tags(*keywords)
-  #   Product.find_by_sql([<<-SQL, keywords, keywords.count])
-  #     SELECT
-  #       *
-  #     FROM
-  #       products
-  #     JOIN
-  #       (
-  #         SELECT
-  #           product_id
-  #         FROM
-  #           tags
-  #         JOIN
-  #           tag_names ON tags.tag_name_id = tag_names.id
-  #         WHERE
-  #           tag_names.name IN (?)
-  #         GROUP BY
-  #           product_id
-  #         HAVING
-  #           COUNT(*) = ?
-  #       ) AS matches ON matches.product_id = products.id
-  #   SQL
-  # end
+
+  # Takes many strings as an argument or a splatted array, e.g.
+  # => Product.select_products_by_tags("the", "north", "face")      or
+  # => Product.select_products_by_tags(*["the", "north", "face"])   or
+  # => Product.select_products_by_tags(*"the north face".split(" "))
+  def self.select_products_by_tags_v2(*keywords)
+    keyword_ids = []
+    keywords.each do |kw|
+      tag_name = TagName.find_by(name: kw)
+      keyword_ids << tag_name.id unless tag_name.nil?
+    end
+
+    product_ids = Product.find_by_sql([<<-SQL, keyword_ids, keywords.count])
+      SELECT
+        product_id
+      FROM
+        tags
+      WHERE
+        tags.tag_name_id IN (?)
+      GROUP BY
+        tags.product_id
+      HAVING
+        COUNT(*) = ?
+    SQL
+
+    Product.find(product_ids.map(&:product_id))
+  end
+
+  # Takes many strings as an argument or a splatted array, e.g.
+  # => Product.select_products_by_tags("the", "north", "face")      or
+  # => Product.select_products_by_tags(*["the", "north", "face"])   or
+  # => Product.select_products_by_tags(*"the north face".split(" "))
+  def self.select_products_by_tags_with_subqueries(*keywords)
+    Product.find_by_sql([<<-SQL, keywords, keywords.count])
+      SELECT
+        *
+      FROM
+        products
+      JOIN
+        (
+          SELECT
+            product_id
+          FROM
+            tags
+          JOIN
+            tag_names ON tags.tag_name_id = tag_names.id
+          WHERE
+            tag_names.name IN (?)
+          GROUP BY
+            product_id
+          HAVING
+            COUNT(*) = ?
+        ) AS matches ON matches.product_id = products.id
+    SQL
+  end
 
 end
