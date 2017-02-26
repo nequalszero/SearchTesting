@@ -65,15 +65,74 @@ class Product < ActiveRecord::Base
   end
 
   # Accepts an array of strings (keywords)
+  def self.select_products_by_hstore_v2(keywords, count = false)
+    products = Product.find_by_sql ["
+      SELECT
+        *
+      FROM
+        products
+      WHERE
+        keywords_hs ?& ARRAY[ARRAY(
+          SELECT
+            id
+          FROM
+            tag_names
+          WHERE
+            name IN (:array)
+          )]::varchar[]", {array: keywords}]
+
+    count ? products.count : products
+  end
+
+  # Accepts an array of strings (keywords)
   def self.select_products_by_jsonb(keywords, count = false)
     tag_name_ids = TagName.get_tag_name_ids(keywords).map(&:id).map(&:to_s)
     products = Product.where("keywords_jsonb ?& ARRAY[:array]", array: tag_name_ids)
     count ? products.count : products
   end
 
+  # Accepts an array of strings (keywords)
+  def self.select_products_by_jsonb_v2(keywords, count = false)
+    products = Product.find_by_sql ["
+      SELECT
+        *
+      FROM
+        products
+      WHERE
+        keywords_jsonb ?& ARRAY[ARRAY(
+          SELECT
+            id
+          FROM
+            tag_names
+          WHERE
+            name IN (:array)
+          )]::varchar[]", {array: keywords}]
+
+    count ? products.count : products
+  end
+
   def self.select_products_by_array(keywords, count = false)
     tag_name_ids = TagName.get_tag_name_ids(keywords).map(&:id)
     products = Product.where("keywords_arr @> ARRAY[:array]::varchar[]", array: tag_name_ids)
+    count ? products.count : products
+  end
+
+  def self.select_products_by_array_v2(keywords, count = false)
+    products = Product.find_by_sql ["
+      SELECT
+        *
+      FROM
+        products
+      WHERE
+        keywords_arr @> ARRAY[ARRAY(
+          SELECT
+            id
+          FROM
+            tag_names
+          WHERE
+            name IN (:array)
+          )]::varchar[]", {array: keywords}]
+
     count ? products.count : products
   end
 

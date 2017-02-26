@@ -13,10 +13,13 @@ end
 # Accepts a 2D array of strings
 def benchmark_block(keywords_arrays)
   Benchmark.bmbm do |x|
-    x.report("relation w/ subq, join:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_with_subqueries(*kw_arr) } }
-    x.report("relation w/ joins:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags(*kw_arr) } }
-    x.report("relation w/ 2 queries:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v2(*kw_arr) } }
+    x.report("relation w/ 2 joins:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags(*kw_arr) } }
+    x.report("relation w/ 3 queries:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v2(*kw_arr) } }
     x.report("relation w/ 2 subq:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v3(*kw_arr) } }
+    x.report("relation w/ 1 subq, 2 joins:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_with_subqueries(*kw_arr) } }
+    x.report("jsonb w/ 1 subq:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_jsonb_v2(kw_arr) }  }
+    x.report("array w/ 1 subq:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_array_v2(kw_arr) }  }
+    x.report("hstore w/ 1 subq:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_hstore_v2(kw_arr) }  }
     x.report("jsonb w/ 2 queries:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_jsonb(kw_arr) }  }
     x.report("hstore w/ 2 queries:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_hstore(kw_arr) }  }
     x.report("array w/ 2 queries:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_array(kw_arr) }  }
