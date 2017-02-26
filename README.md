@@ -6,15 +6,15 @@ The database is seeded with fake outdoor industry products, with most products h
 
 ## Goal
 
-* Compare the differences in search query times for Postgresql hstore, jsonb, and array column data types against multi-table relations.
+Compare the differences in search query times for Postgresql hstore, jsonb, and array column data types against multi-table relations.
 
 ## Setup
 
-1.) Clone the project to your local machine.
-2.) Make sure Postgres is running.
-3.) Run `bundle install`
-4.) Delete the username and password information in `config/database.yml`
-5.) Run  `rake db:setup` to populate the database.  
+1. Clone the project to your local machine.
+2. Make sure Postgres is running.
+3. Run `bundle install`
+4. Delete the username and password information in `config/database.yml`
+5. Run  `rake db:setup` to populate the database.  
 
 ## Usage
 Enter the `rails console`. Load the benchmarking file by typing `load 'lib/product_benchmark.rb'`.  The two functions that perform benchmarking are `test_search_methods` and `search_for_products`.
