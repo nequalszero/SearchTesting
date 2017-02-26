@@ -59,25 +59,43 @@ class Product < ActiveRecord::Base
   def self.select_products_by_tags(*keywords)
     Product.find_by_sql([<<-SQL, keywords, keywords.count])
       SELECT
-        *
+        products.*
       FROM
         products
       JOIN
-        (
-          SELECT
-            product_id
-          FROM
-            tags
-          JOIN
-            tag_names ON tags.tag_name_id = tag_names.id
-          WHERE
-            tag_names.name IN (?)
-          GROUP BY
-            product_id
-          HAVING
-            COUNT(*) = ?
-        ) AS matches ON matches.product_id = products.id
+        tags ON tags.product_id = products.id
+      JOIN
+        tag_names on tag_names.id = tags.tag_name_id
+      WHERE
+        tag_names.name IN (?)
+      GROUP BY
+        products.id
+      HAVING
+        COUNT(*) = ?
     SQL
   end
+  # def self.select_products_by_tags(*keywords)
+  #   Product.find_by_sql([<<-SQL, keywords, keywords.count])
+  #     SELECT
+  #       *
+  #     FROM
+  #       products
+  #     JOIN
+  #       (
+  #         SELECT
+  #           product_id
+  #         FROM
+  #           tags
+  #         JOIN
+  #           tag_names ON tags.tag_name_id = tag_names.id
+  #         WHERE
+  #           tag_names.name IN (?)
+  #         GROUP BY
+  #           product_id
+  #         HAVING
+  #           COUNT(*) = ?
+  #       ) AS matches ON matches.product_id = products.id
+  #   SQL
+  # end
 
 end
