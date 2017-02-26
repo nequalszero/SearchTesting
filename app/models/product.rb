@@ -57,6 +57,9 @@ class Product < ActiveRecord::Base
     }
   end
 
+  # Makes 2 queries:
+  # => 1 for getting tag_name_ids,
+  # => 1 for querying the hstore column of the products table
   # Accepts an array of strings (keywords)
   def self.select_products_by_hstore(keywords, count = false)
     tag_name_ids = TagName.get_tag_name_ids(keywords).map(&:id).map(&:to_s)
@@ -64,6 +67,8 @@ class Product < ActiveRecord::Base
     count ? products.count : products
   end
 
+  # Makes a single query to the hstore column of the products table with a subquery
+  # => to the tag_names table
   # Accepts an array of strings (keywords)
   def self.select_products_by_hstore_v2(keywords, count = false)
     products = Product.find_by_sql ["
@@ -84,6 +89,9 @@ class Product < ActiveRecord::Base
     count ? products.count : products
   end
 
+  # Makes 2 queries:
+  # => 1 for getting tag_name_ids,
+  # => 1 for querying the jsonb column of the products table
   # Accepts an array of strings (keywords)
   def self.select_products_by_jsonb(keywords, count = false)
     tag_name_ids = TagName.get_tag_name_ids(keywords).map(&:id).map(&:to_s)
@@ -91,6 +99,8 @@ class Product < ActiveRecord::Base
     count ? products.count : products
   end
 
+  # Makes a single query to the jsonb column of the products table with a subquery
+  # => to the tag_names table
   # Accepts an array of strings (keywords)
   def self.select_products_by_jsonb_v2(keywords, count = false)
     products = Product.find_by_sql ["
@@ -111,12 +121,19 @@ class Product < ActiveRecord::Base
     count ? products.count : products
   end
 
+  # Makes 2 queries:
+  # => 1 for getting tag_name_ids,
+  # => 1 for querying the array column of the products table
+  # Accepts an array of strings (keywords)
   def self.select_products_by_array(keywords, count = false)
     tag_name_ids = TagName.get_tag_name_ids(keywords).map(&:id)
     products = Product.where("keywords_arr @> ARRAY[:array]::varchar[]", array: tag_name_ids)
     count ? products.count : products
   end
 
+  # Makes a single query to the array column of the products table with a subquery
+  # => to the tag_names table
+  # Accepts an array of strings (keywords)
   def self.select_products_by_array_v2(keywords, count = false)
     products = Product.find_by_sql ["
       SELECT
