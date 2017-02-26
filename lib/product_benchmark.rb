@@ -16,6 +16,7 @@ def benchmark_block(keywords_arrays)
     x.report("by relation w/ subquery:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_with_subqueries(*kw_arr) } }
     x.report("by relation:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags(*kw_arr) } }
     x.report("by relation v2:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v2(*kw_arr) } }
+    x.report("by relation v3:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v3(*kw_arr) } }
     x.report("by jsonb:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_jsonb(kw_arr) }  }
     x.report("by hstore:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_hstore(kw_arr) }  }
     x.report("by array:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_array(kw_arr) }  }
@@ -50,7 +51,7 @@ def search_for_products(n = 1000)
   disable_activerecord_sql_logging()
   keywords_arrays = Product.all.pluck(:keywords_arr).shuffle.take(n)
 
-  puts "\nBenchmark for performing search for #{num_products} products:"
+  puts "\nBenchmark for performing search for #{n} products:"
   puts "Sample query: #{keywords_arrays.first}", ""
 
   benchmark_block(keywords_arrays)
@@ -58,6 +59,9 @@ def search_for_products(n = 1000)
   enable_activerecord_sql_logging()
 end
 
+# Takes one argument for number of products to seed (default 1).
+# => Tests speed for inserting num_products new products.
+# => Does not reflect seed speed, as seed utilizes a batch insertion proc.
 def test_seed_speed(num_products = 1)
   puts "\nBenchmark for seeding #{num_products} products"
 

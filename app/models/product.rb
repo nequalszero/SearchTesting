@@ -106,6 +106,49 @@ class Product < ActiveRecord::Base
     Product.find(product_ids.map(&:product_id))
   end
 
+  # Similar to select_products_by_tags_v2 method above but utilizes 2 subqueries
+  # => to keep subquery results SQL-side.
+  # Takes many strings as an argument or a splatted array, e.g.
+  # => Product.select_products_by_tags("the", "north", "face")      or
+  # => Product.select_products_by_tags(*["the", "north", "face"])   or
+  # => Product.select_products_by_tags(*"the north face".split(" "))
+  def self.select_products_by_tags_v3(*keywords)
+    # keyword_ids = []
+    # keywords.each do |kw|
+    #   tag_name = TagName.find_by(name: kw)
+    #   keyword_ids << tag_name.id unless tag_name.nil?
+    # end
+
+    products = Product.find_by_sql([<<-SQL, keywords, keywords.count])
+    SELECT
+      *
+    FROM
+      products
+    WHERE
+      id IN (
+        SELECT
+          product_id
+        FROM
+          tags
+        WHERE
+        tags.tag_name_id IN (
+          SELECT
+            id
+          FROM
+            tag_names
+          WHERE
+            name IN (?)
+        )
+        GROUP BY
+          tags.product_id
+        HAVING
+          COUNT(*) = ?
+      )
+    SQL
+
+    # Product.find(product_ids.map(&:product_id))
+  end
+
   # Takes many strings as an argument or a splatted array, e.g.
   # => Product.select_products_by_tags("the", "north", "face")      or
   # => Product.select_products_by_tags(*["the", "north", "face"])   or
