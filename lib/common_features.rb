@@ -27,21 +27,6 @@ end
 
 FILL_POWERS = [550, 600, 650, 700, 750, 800, 850, 900]
 
-def create_product_params(keywords)
-  keywords = keywords.map { |kw| kw.split(" ") }.flatten
-  name = keywords.join(" ")
-  keywords = keywords.map { |kw| kw.downcase }
-  keywords_hash = {}
-  keywords.each { |kw| keywords_hash[kw] = true}
-
-  params = {
-    name: name,
-    keywords_hs: keywords_hash,
-    keywords_arr: keywords,
-    keywords_jsonb: keywords_hash
-  }
-end
-
 def random_model_name
   # Faker::GameOfThrones.unique.city    # 36 options
   # Faker::GameOfThrones.unique.dragon  # 19 options

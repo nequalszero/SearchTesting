@@ -13,13 +13,13 @@ end
 # Accepts a 2D array of strings
 def benchmark_block(keywords_arrays)
   Benchmark.bmbm do |x|
-    x.report("by relation w/ subquery:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_with_subqueries(*kw_arr) } }
-    x.report("by relation:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags(*kw_arr) } }
-    x.report("by relation v2:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v2(*kw_arr) } }
-    x.report("by relation v3:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v3(*kw_arr) } }
-    x.report("by jsonb:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_jsonb(kw_arr) }  }
-    x.report("by hstore:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_hstore(kw_arr) }  }
-    x.report("by array:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_array(kw_arr) }  }
+    x.report("relation w/ subq, join:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_with_subqueries(*kw_arr) } }
+    x.report("relation w/ joins:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags(*kw_arr) } }
+    x.report("relation w/ 2 queries:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v2(*kw_arr) } }
+    x.report("relation w/ 2 subq:") { keywords_arrays.each { |kw_arr| Product.select_products_by_tags_v3(*kw_arr) } }
+    x.report("jsonb w/ 2 queries:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_jsonb(kw_arr) }  }
+    x.report("hstore w/ 2 queries:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_hstore(kw_arr) }  }
+    x.report("array w/ 2 queries:")  { keywords_arrays.each { |kw_arr| Product.select_products_by_array(kw_arr) }  }
   end
 end
 
@@ -49,7 +49,8 @@ def search_for_products(n = 1000)
   end
 
   disable_activerecord_sql_logging()
-  keywords_arrays = Product.all.pluck(:keywords_arr).shuffle.take(n)
+  keywords_arrays = Product.all.pluck(:name).shuffle.take(n)
+  keywords_arrays = keywords_arrays.map { |name| name.split(" ").map(&:downcase) }
 
   puts "\nBenchmark for performing search for #{n} products:"
   puts "Sample query: #{keywords_arrays.first}", ""

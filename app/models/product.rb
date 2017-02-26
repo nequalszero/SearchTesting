@@ -20,30 +20,60 @@ class Product < ActiveRecord::Base
 
   validates :name, :keywords_hs, :keywords_arr, :keywords_jsonb, presence: true
 
-  def self.create_new_product(params)
+  def self.create_new_product(keywords)
+    keywords = keywords.map { |kw| kw.split(" ") }.flatten
+    name = keywords.join(" ")
+    tag_names_ids = keywords.map { |kw| TagName.retrieve_tag_name(kw.downcase) }
+    keywords_hash = {}
+    tag_names_ids.each { |tag_name_id| keywords_hash[tag_name_id] = true}
+
+    params = {
+      name: name,
+      keywords_hs: keywords_hash,
+      keywords_arr: tag_names_ids,
+      keywords_jsonb: keywords_hash
+    }
+
     product = Product.create(params)
 
-    params[:keywords_arr].each do |kw|
-      tag_name = TagName.retrieve_tag_name(kw)
-      TagMap.assign_product_id(tag_name.id, product.id)
-      Tag.create({tag_name_id: tag_name.id, product_id: product.id})
+    tag_names_ids.each do |tag_name_id|
+      TagMap.assign_product_id(tag_name_id, product.id)
+      Tag.create({tag_name_id: tag_name_id, product_id: product.id})
     end
+  end
+
+  def self.create_product_params(keywords)
+    keywords = keywords.map { |kw| kw.split(" ") }.flatten
+    name = keywords.join(" ")
+    keywords = keywords.map { |kw| kw.downcase }
+    keywords_hash = {}
+    keywords.each { |kw| keywords_hash[kw] = true}
+
+    params = {
+      name: name,
+      keywords_hs: keywords_hash,
+      keywords_arr: keywords,
+      keywords_jsonb: keywords_hash
+    }
   end
 
   # Accepts an array of strings (keywords)
   def self.select_products_by_hstore(keywords, count = false)
-    products = Product.where("keywords_hs ?& ARRAY[:array]", array: keywords)
+    tag_name_ids = TagName.get_tag_name_ids(keywords).map(&:id).map(&:to_s)
+    products = Product.where("keywords_hs ?& ARRAY[:array]", array: tag_name_ids)
     count ? products.count : products
   end
 
   # Accepts an array of strings (keywords)
   def self.select_products_by_jsonb(keywords, count = false)
-    products = Product.where("keywords_jsonb ?& ARRAY[:array]", array: keywords)
+    tag_name_ids = TagName.get_tag_name_ids(keywords).map(&:id).map(&:to_s)
+    products = Product.where("keywords_jsonb ?& ARRAY[:array]", array: tag_name_ids)
     count ? products.count : products
   end
 
   def self.select_products_by_array(keywords, count = false)
-    products = Product.where("keywords_arr @> ARRAY[:array]::varchar[]", array: keywords)
+    tag_name_ids = TagName.get_tag_name_ids(keywords).map(&:id)
+    products = Product.where("keywords_arr @> ARRAY[:array]::varchar[]", array: tag_name_ids)
     count ? products.count : products
   end
 
@@ -84,13 +114,9 @@ class Product < ActiveRecord::Base
   # => Product.select_products_by_tags(*["the", "north", "face"])   or
   # => Product.select_products_by_tags(*"the north face".split(" "))
   def self.select_products_by_tags_v2(*keywords)
-    keyword_ids = []
-    keywords.each do |kw|
-      tag_name = TagName.find_by(name: kw)
-      keyword_ids << tag_name.id unless tag_name.nil?
-    end
+    tag_name_ids = TagName.get_tag_name_ids(keywords)
 
-    product_ids = Product.find_by_sql([<<-SQL, keyword_ids, keywords.count])
+    product_ids = Product.find_by_sql([<<-SQL, tag_name_ids, keywords.count])
       SELECT
         product_id
       FROM
@@ -113,40 +139,32 @@ class Product < ActiveRecord::Base
   # => Product.select_products_by_tags(*["the", "north", "face"])   or
   # => Product.select_products_by_tags(*"the north face".split(" "))
   def self.select_products_by_tags_v3(*keywords)
-    # keyword_ids = []
-    # keywords.each do |kw|
-    #   tag_name = TagName.find_by(name: kw)
-    #   keyword_ids << tag_name.id unless tag_name.nil?
-    # end
-
-    products = Product.find_by_sql([<<-SQL, keywords, keywords.count])
-    SELECT
-      *
-    FROM
-      products
-    WHERE
-      id IN (
-        SELECT
-          product_id
-        FROM
-          tags
-        WHERE
-        tags.tag_name_id IN (
+    Product.find_by_sql([<<-SQL, keywords, keywords.count])
+      SELECT
+        *
+      FROM
+        products
+      WHERE
+        id IN (
           SELECT
-            id
+            product_id
           FROM
-            tag_names
+            tags
           WHERE
-            name IN (?)
+          tags.tag_name_id IN (
+            SELECT
+              id
+            FROM
+              tag_names
+            WHERE
+              name IN (?)
+          )
+          GROUP BY
+            tags.product_id
+          HAVING
+            COUNT(*) = ?
         )
-        GROUP BY
-          tags.product_id
-        HAVING
-          COUNT(*) = ?
-      )
     SQL
-
-    # Product.find(product_ids.map(&:product_id))
   end
 
   # Takes many strings as an argument or a splatted array, e.g.

@@ -84,7 +84,7 @@ def extra_sleeping_bag_keywords(params)
 end
 
 def seed_one_sleeping_bag(&prc)
-  prc ||= Proc.new { |params| Product.create_new_product(params) }
+  prc ||= Proc.new { |keywords| Product.create_new_product(keywords) }
 
   type = rand() > 0.5 ? :down : :synthetic
   brand = type == :down ? DOWN_SB_BRANDS.sample : SYNTH_SB_BRANDS.sample
@@ -103,14 +103,12 @@ def seed_one_sleeping_bag(&prc)
 
   extras = extra_sleeping_bag_keywords(options)
 
-  params = create_product_params([brand, model_name, temp.to_s, color, *extras])
-
-  prc.call(params)
+  prc.call([brand, model_name, temp.to_s, color, *extras])
 end
 
 
 def seed_sleeping_bags(type = :down, &prc)
-  prc ||= Proc.new { |params| Product.create_new_product(params) }
+  prc ||= Proc.new { |keywords| Product.create_new_product(keywords) }
   brands = type == :down ? DOWN_SB_BRANDS : SYNTH_SB_BRANDS
   puts "\nSeeding #{type} sleeping bags."
 
@@ -141,9 +139,7 @@ def seed_sleeping_bags(type = :down, &prc)
 
       temps.each do |temp|
         colors.each do |color|
-          params = create_product_params([brand, model_name, temp.to_s, color, *extras])
-
-          prc.call(params)
+          prc.call([brand, model_name, temp.to_s, color, *extras])
         end
       end
     end

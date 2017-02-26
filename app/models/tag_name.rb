@@ -40,4 +40,15 @@ class TagName < ActiveRecord::Base
 
     tag_combos.to_a.map { |set| set.to_a }
   end
+
+  def self.get_tag_name_ids(keywords)
+    TagName.find_by_sql([<<-SQL, keywords])
+      SELECT
+        id
+      FROM
+        tag_names
+      WHERE
+        name IN (?)
+    SQL
+  end
 end

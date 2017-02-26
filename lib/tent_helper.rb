@@ -96,7 +96,7 @@ def add_additional_capacities(starting_capacity)
 end
 
 def seed_one_tent(&prc)
-  prc ||= Proc.new { |params| Product.create_new_pCOLORS.shuffle.takeroduct(params) }
+  prc ||= Proc.new { |keywords| Product.create_new_product(keywords) }
 
   seasons = rand() > 0.8 ? 4 : 3
   brand = seasons == 3 ? TENT_BRANDS_3S.sample : TENT_BRANDS_4S.sample
@@ -111,12 +111,11 @@ def seed_one_tent(&prc)
   }
 
   extras = extra_tent_keywords(options)
-  params = create_product_params([brand, model_name, capacity.to_s, "#{seasons}-season", "#{num_doors}-door", color, *extras])
-  prc.call(params)
+  prc.call([brand, model_name, capacity.to_s, "#{seasons}-season", "#{num_doors}-door", color, *extras])
 end
 
 def seed_tents(seasons = 3, &prc)
-  prc ||= Proc.new { |params| Product.create_new_product(params) }
+  prc ||= Proc.new { |keywords| Product.create_new_product(keywords) }
   puts "\nSeeding #{seasons}-season tents."
   brands = seasons == 3 ? TENT_BRANDS_3S : TENT_BRANDS_4S
 
@@ -141,8 +140,7 @@ def seed_tents(seasons = 3, &prc)
       capacities.each do |capacity|
         num_doors = rand(1..MAX_NUM_DOORS[capacity])
         colors.each do |color|
-          params = create_product_params([brand, model_name, capacity.to_s, "#{seasons}-season", "#{num_doors}-door", color, *extras])
-          prc.call(params)
+          prc.call([brand, model_name, capacity.to_s, "#{seasons}-season", "#{num_doors}-door", color, *extras])
         end
       end
     end

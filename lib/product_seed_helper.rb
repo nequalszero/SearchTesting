@@ -8,18 +8,33 @@ def batch_seed_sleeping_bags
   batch_size = 1_000
   tag_ids = {}
 
-  batch_proc = Proc.new { |params|
-    batches[:products] << Product.new(params)
-    counts[:products] += 1
+  batch_proc = Proc.new { |keywords|
+    keywords = keywords.map { |kw| kw.split(" ") }.flatten
+    tag_name_ids, keywords_hash = [], {}
 
-    params[:keywords_arr].each do |kw|
+    keywords.each do |kw|
+      counts[:tags] += 1
+      kw = kw.downcase
+
       unless tag_ids.has_key?(kw)
         tag_ids[kw] = counts[:tag_names] += 1
         batches[:tag_names] << TagName.new(name: kw)
       end
-      counts[:tags] += 1
-      batches[:tags] << Tag.new( tag_name_id: tag_ids[kw], product_id: counts[:products] )
+
+      tag_name_ids << tag_ids[kw]
+      keywords_hash[tag_ids[kw]] = true
+      batches[:tags] << Tag.new( tag_name_id: tag_ids[kw], product_id: counts[:products] + 1 )
     end
+
+    params = {
+      name: keywords.join(" "),
+      keywords_jsonb: keywords_hash,
+      keywords_hs: keywords_hash,
+      keywords_arr: tag_name_ids
+    }
+
+    batches[:products] << Product.new(params)
+    counts[:products] += 1
 
     if counts[:tags] >= batch_size
       new_records = batches.map {|_, val| val.length}.inject { |accum, i| accum + i }
