@@ -80,18 +80,21 @@ def parse_benchmark_log_files
         puts "line: #{line}"
         # puts "query_type: #{query_type}"
         results_section["#{query_type}"] = {
-          user: user_time,
-          system: system_time,
-          total: total_time,
-          real: real_time
+          user: user_time.to_f,
+          system: system_time.to_f,
+          total: total_time.to_f,
+          real: real_time.to_f
         }
       end
     end
   end
 
   puts "\nWriting JSON to file"
-  File.open("processed_data/results.json","w") do |f|
+  File.open("processed_data/results.js","w") do |f|
+    f.write("const applicationData = ")
     f.write(JSON.pretty_generate(results))
+    f.write(";\n\n")
+    f.write("export default applicationData;")
   end
   puts "\nDone"
 end
