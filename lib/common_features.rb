@@ -25,8 +25,6 @@ def pick_colors(num_colors)
   colors
 end
 
-FILL_POWERS = [550, 600, 650, 700, 750, 800, 850, 900]
-
 def random_model_name
   # Faker::GameOfThrones.unique.city    # 36 options
   # Faker::GameOfThrones.unique.dragon  # 19 options

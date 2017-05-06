@@ -19,13 +19,15 @@ Compare the differences in search query times for Postgresql hstore, jsonb, and 
 ## Usage
 Enter the `rails console`. Load the benchmarking file by typing `load 'lib/product_benchmark.rb'`.  The two functions that perform benchmarking are `test_search_methods` and `search_for_products`.
 
-### test_search_methods:
+### test_search_methods(num_keywords_per_group = 1, num_groups = TagName.count):
 Takes an optional number of keywords per group (default 1) and optional number of groups (default TagName.count); performs num_groups queries of num_keywords_per_group for each search method.
 
-### search_for_products:
+### search_for_products(n = 1000):
 Takes an optional argument of number of products to search for (default 1000).
 Grabs the keyword arrays for n products and then times the queries for each of the search methods.
 
+### realistic_product_search(limit_1000 = true):
+Takes an optional argument to limit the number of queries to 1000.  Queries the database using common realistic search phrases of varying numbers of keywords.  If the optional argument is omitted, will perform several thousand queries and take a while.
 
 ## Query Definitions
 Queries are defined in `app/models/product.rb`.  New queries can be defined and easily added to the search methods being benchmarked by modifying the `benchmark_block` function in `lib/product_benchmark.rb`.

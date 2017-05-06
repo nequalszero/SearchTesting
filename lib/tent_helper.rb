@@ -1,46 +1,5 @@
 require_relative './common_features'
-
-TENT_BRANDS_3S = "ALPS Mountaineering
-Alite Designs
-Basin And Range
-Big Agnes
-Black Diamond
-Brooks-Range
-Burton
-Eureka
-Exped
-Heimplanet
-Jack Wolfskin
-Kelty
-MSR
-Marmot
-Mountain Hardwear
-Mountainsmith
-NEMO Equipment Inc.
-Paha Que
-Poler
-REI
-Sea To Summit
-Sierra Designs
-Tentsile
-Tepui
-Terra Nova
-The North Face
-Vaude".split("\n")
-
-TENT_BRANDS_4S = "ALPS Mountaineering
-Big Agnes
-Black Diamond
-Brooks-Range
-Eureka
-Exped
-MSR
-Marmot
-Mountain Hardwear
-NEMO Equipment Inc.
-Rab
-Terra Nova
-The North Face".split("\n")
+require_relative './brands'
 
 MAX_NUM_DOORS = {
   1 => 1,
@@ -51,7 +10,25 @@ MAX_NUM_DOORS = {
   6 => 3
 }
 
-require 'byebug'
+TENT_KEYWORDS = [
+  "3-season", "4-season", "camping", "backpacking", "semi-freestanding",
+  "non-freestanding", "freestanding", "single-wall", "double-wall",
+  "fast-pitch option", "ultralight", "mountaineering", "inflateable-poles",
+  "expedition", "ultralight 3-season", "ultralight 4-season", "ultralight backpacking",
+  "ultralight mountaineering", "fast-pitch option backpacking", "single-wall backpacking",
+  "single-wall expedition", "single-wall mountaineering", "ultralight single-wall",
+  "double-wall backpacking", "double-wall mountaineering", "double-wall expedition",
+  "ultralight double-wall", "footprint-included", "camping footprint-included",
+  "backpacking footprint-included", "inflateable-poles", "3-season single-wall",
+  "3-season single-wall fast-pitch option", "3-season single-wall ultralight",
+  "3-season single-wall fast-pitch option ultralight", "4-season single-wall",
+  "4-season single-wall fast-pitch option", "4-season single-wall ultralight",
+  "4-season single-wall fast-pitch option ultralight", "3-season double-wall",
+  "3-season double-wall fast-pitch option", "3-season double-wall ultralight",
+  "3-season double-wall fast-pitch option ultralight", "4-season double-wall",
+  "4-season double-wall fast-pitch option", "4-season double-wall ultralight",
+  "4-season double-wall fast-pitch option ultralight",
+]
 
 def extra_tent_keywords(options)
   keywords = []

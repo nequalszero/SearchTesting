@@ -1,54 +1,5 @@
 require_relative './common_features'
-
-DOWN_SB_BRANDS = "Basin And Range
-Big Agnes
-Brooks-Range
-Crux
-Fjallraven
-Haglöfs
-Kammok
-Kelty
-Marmot
-Millet
-Mountain Equipment
-Mountain Hardwear
-NEMO Equipment Inc.
-Rab
-REI
-Sea To Summit
-Sierra Designs
-The North Face
-Therm-A-Rest
-Valandre
-Vaude
-Western Mountaineering
-Yeti International".split("\n")
-
-SYNTH_SB_BRANDS = "ALPS Mountaineering
-Basin And Range
-Big Agnes
-Burton
-Eureka
-Fjallraven
-Haglöfs
-Kammok
-Kelty
-Mammut
-Marmot
-Millet
-Mountain Equipment
-Mountain Hardwear
-Mountainsmith
-NEMO Equipment Inc.
-Poler
-Rab
-REI
-Sea To Summit
-Selk'bag USA, Inc.
-Sierra Designs
-The North Face
-Therm-A-Rest
-Vaude".split("\n")
+require_relative './brands'
 
 def down_sb_adjectives(fill_power, temp)
   keywords = [fill_power.to_s, "Fill", "Power", "Down", "Sleeping", "Bag"]
@@ -67,8 +18,20 @@ def synthetic_sb_adjectives(temp, insulation_type)
   keywords
 end
 
+FILL_POWERS = [550, 600, 650, 700, 750, 800, 850, 900]
 SB_INSULATIONS = ["Coreloft", "Primaloft Infinity", "Polarguard Delta", "Stratofiber", "Thermaloft", "Heatseeker Pro", "Heatseeker Eco"]
 SB_TEMPERATURES = [-40, -30, -20, -15, -10, 0, 5, 10, 15, 20, 25, 30, 35, 40]
+SB_KEYWORDS = []
+SB_KEYWORDS.concat( SB_TEMPERATURES.map { |temp| "#{temp} down"} )
+SB_KEYWORDS.concat( SB_TEMPERATURES.map { |temp| "#{temp} synthetic"} )
+SB_KEYWORDS.concat( SB_INSULATIONS.map { |i| "#{i} synthetic"} )
+SB_KEYWORDS.concat(FILL_POWERS.map { |fp| "#{fp} fill power down" } )
+SB_KEYWORDS.concat([
+  "down", "synthetic", "waterproof down", "waterproof synthetic", "expedition",
+  "montaineering", "4-season", "gore-tex", "water-resistant", "backpacking", "camping",
+  "ultralight", "ultralight down", "down backpacking", "synthetic backpacking",
+  "ultralight backpacking", "ultralight down expedition"
+])
 
 def extra_sleeping_bag_keywords(params)
   raise "sleeping_bag_helper#extra_sleeping_bag_keywords - Error missing params[:type]" unless params[:type]
