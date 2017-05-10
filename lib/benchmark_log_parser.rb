@@ -1,3 +1,5 @@
+require 'set'
+
 # Determines the number of queries made and the type of benchmark conducted
 def determine_file_contents(filename)
   case filename[0]
@@ -20,12 +22,12 @@ end
 def prepare_and_select_result_section(results, file_info)
   case file_info[:type]
   when :realistic_product_search
-    results[:realistic_product_search][:details] = {queries: file_info[:queries]}
-    return results[:realistic_product_search][:benchmarks] = {};
+    results[:data][:realistic_product_search][:details] = {queries: file_info[:queries]}
+    return results[:data][:realistic_product_search][:benchmarks] = {};
 
   when :product_search
-    results[:product_search][:details] = {queries: file_info[:queries]}
-    return results[:product_search][:benchmarks] = {};
+    results[:data][:product_search][:details] = {queries: file_info[:queries]}
+    return results[:data][:product_search][:benchmarks] = {};
 
   when :random_keyword_search
     new_record = {
@@ -35,8 +37,8 @@ def prepare_and_select_result_section(results, file_info)
       },
       benchmarks: {}
     }
-    results[:random_keyword_search].append(new_record)
-    return results[:random_keyword_search].last
+    results[:data][:random_keyword_search].append(new_record)
+    return results[:data][:random_keyword_search].last
 
   else
     throw "Invalid file info type: #{file_info[:type]}"
@@ -55,10 +57,15 @@ def parse_benchmark_log_files
 
   # Results hash to be written to JSON. Note that random_keyword_search is an array.
   results = {
-    realistic_product_search: {},
-    product_search: {},
-    random_keyword_search: []
+    query_keys: [],
+    data: {
+      realistic_product_search: {},
+      product_search: {},
+      random_keyword_search: []
+    }
   }
+
+  query_keys = Set.new
 
   # Process each of the benchmark log files
   file_names.each do |file|
@@ -85,9 +92,12 @@ def parse_benchmark_log_files
           total: total_time.to_f,
           real: real_time.to_f
         }
+        query_keys.add(query_type)
       end
     end
   end
+
+  results[:query_keys] = query_keys.to_a
 
   puts "\nWriting JSON to file"
   File.open("processed_data/results.js","w") do |f|

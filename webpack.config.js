@@ -1,11 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  context: __dirname,
-  entry: './frontend/util.js',
+  entry: './frontend/entry.js',
   output: {
-    path: path.resolve(__dirname, 'frontend'),
-    filename: 'bundle.js'
+    filename: './frontend/bundle.js'
   },
   resolve: {
     extensions: ['.js', '.jsx', '*']
@@ -13,8 +11,16 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
+        test: [/\.css?$/],
+        loader: 'style-loader!css-loader'
+      },
+      {
+        test: /\.(jpe?g|gif|png)$/,
+        loader: 'file-loader?emitFile=false&name=[path][name].[ext]'
+      },
+      {
+        test: [/\.jsx?$/, /\.js?$/],
+        exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
           presets: ['react', 'es2015', 'stage-1']
