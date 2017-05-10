@@ -14,11 +14,16 @@ Compare the differences in search query times for Postgresql hstore, jsonb, and 
 2. Make sure Postgres is running.
 3. Run `bundle install`
 4. Delete the username and password information in `config/database.yml`
-5. Run  `rake db:setup` to populate the database.  
+5. Run  `rake db:setup` to configure and populate the database.  
 
 ## Usage
-Enter the `rails console`. Load the benchmarking file by typing `load 'lib/product_benchmark.rb'`.  The two functions that perform benchmarking are `test_search_methods` and `search_for_products`.
+Enter the `rails console`. Load the benchmarking file by typing `load 'lib/product_benchmark.rb'`.  The functions that perform benchmarking are `test_search_methods`, `search_for_products`, and `realistic_product_search`.
 
+Each function logs it output to files that can be found in `lib/benchmarks`. The files are named following some abbreviations (`q` for number of queries, `kw` for number of keywords, `ps` for product search, and `rps` for realistic product search) that are used in parsing the log files.
+
+The log files can be parsed by typing `load 'lib/benchmark_log_parser.rb'` followed by calling `parse_benchmark_log_files`. This will parse the log files into a JavaScript object that can be found in `processed_data/results.js`.
+
+## Benchmark Function Descriptions
 ### test_search_methods(num_keywords_per_group = 1, num_groups = TagName.count):
 Takes an optional number of keywords per group (default 1) and optional number of groups (default TagName.count); performs num_groups queries of num_keywords_per_group for each search method.
 
