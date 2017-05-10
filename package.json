@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "webpack-dev-server --hot --inline",
-    "transpile-scss": "node-sass -o frontend/css frontend/scss --output-style expanded",
+    "build:sass": "node-sass -r -o frontend/styles/css frontend/styles/scss --output-style expanded",
+    "watch:sass": "npm run build:sass && npm run build:sass -- -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

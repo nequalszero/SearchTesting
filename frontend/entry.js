@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app';
-import './css/main.css';
+import './styles/css/main.css';
 
 document.addEventListener('DOMContentLoaded', () => {
   const rootEl = document.getElementById('root');

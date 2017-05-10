@@ -4,6 +4,8 @@ This project tests the efficiency of searching a database for keywords/tags via 
 
 The database is seeded with fake outdoor industry products, with most products having 10-20 tags. The activerecord-import gem is used for batch insertion to speed up the seeding process.
 
+Note that the back end is completely separate from the front end in this project, and there are no Rails controllers.
+
 ## Goal
 
 Compare the differences in search query times for Postgresql hstore, jsonb, and array column data types against multi-table relations.
@@ -15,8 +17,10 @@ Compare the differences in search query times for Postgresql hstore, jsonb, and 
 3. Run `bundle install`
 4. Delete the username and password information in `config/database.yml`
 5. Run  `rake db:setup` to configure and populate the database.  
+6. Follow directions below in `Backend Usage Information` section for notes on running benchmarks and updating the data accessed by the front end.
+7. Useful commands to run for developing the front end are `npm start` and `npm run build:sass -- -w`. These commands, found in the `package.json` file will fire up the `webpack-dev-server` which will listen for changes to `JavaScript` and `CSS` files, and recompile `SCSS` files to `CSS` upon save. All styling files are found in the `frontend/styles` `CSS` and `SCSS` subfolders.
 
-## Usage
+## Backend Usage Information
 Enter the `rails console`. Load the benchmarking file by typing `load 'lib/product_benchmark.rb'`.  The functions that perform benchmarking are `test_search_methods`, `search_for_products`, and `realistic_product_search`.
 
 Each function logs it output to files that can be found in `lib/benchmarks`. The files are named following some abbreviations (`q` for number of queries, `kw` for number of keywords, `ps` for product search, and `rps` for realistic product search) that are used in parsing the log files.

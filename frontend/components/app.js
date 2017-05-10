@@ -1,6 +1,6 @@
 import React from 'react';
 import applicationData from '../../processed_data/results.js';
-import ColorBar from './Colors/color_bar';
+import ColorBar from './D3Test/color_bar';
 
 class App extends React.Component {
   render() {
