@@ -1,5 +1,19 @@
 @import "base/reset.scss";
 
 #svg {
+  width: 600px;
+  height: 200px;
   border: 2px solid green;
+  margin-bottom: 20px;
+}
+
+.chart-area {
+  min-height: 400px;
+  min-width: 600px;
+  border: 1px solid black;
+  font-size: 1em;
+}
+
+.y-axis {
+  font-size: 0.9em;
 }

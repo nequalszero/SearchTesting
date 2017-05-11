@@ -23,11 +23,11 @@ def prepare_and_select_result_section(results, file_info)
   case file_info[:type]
   when :realistic_product_search
     results[:data][:realistic_product_search][:details] = {queries: file_info[:queries]}
-    return results[:data][:realistic_product_search][:benchmarks] = {};
+    return results[:data][:realistic_product_search][:benchmarks] = [];
 
   when :product_search
     results[:data][:product_search][:details] = {queries: file_info[:queries]}
-    return results[:data][:product_search][:benchmarks] = {};
+    return results[:data][:product_search][:benchmarks] = [];
 
   when :random_keyword_search
     new_record = {
@@ -35,10 +35,11 @@ def prepare_and_select_result_section(results, file_info)
         queries: file_info[:queries],
         keywords: file_info[:keywords]
       },
-      benchmarks: {}
+      benchmarks: []
     }
     results[:data][:random_keyword_search].append(new_record)
-    return results[:data][:random_keyword_search].last
+    # return results[:data][:random_keyword_search].last
+    return new_record[:benchmarks]
 
   else
     throw "Invalid file info type: #{file_info[:type]}"
@@ -85,13 +86,14 @@ def parse_benchmark_log_files
         # after the time heading has been found, parse all following lines
         /(?<query_type>.+):\s+(?<user_time>\d+\.\d+)\s+(?<system_time>\d+\.\d+)\s+(?<total_time>\d+\.\d+)\s+\(\s+(?<real_time>\d+\.\d+)\)/ =~ line
         puts "line: #{line}"
-        # puts "query_type: #{query_type}"
-        results_section["#{query_type}"] = {
+
+        results_section.push({
+          query_key: query_type,
           user: user_time.to_f,
           system: system_time.to_f,
           total: total_time.to_f,
           real: real_time.to_f
-        }
+        })
         query_keys.add(query_type)
       end
     end
