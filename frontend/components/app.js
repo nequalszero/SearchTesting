@@ -24,9 +24,9 @@ class App extends React.Component {
     return (
       <div className="app-container">
         <h1>This is the App file</h1>
-        <svg id="svg">
+        {/* <svg id="svg">
           <ColorBar width="400"/>
-        </svg>
+        </svg> */}
         <button onClick={() => this.changeDataSet(0)}>Data Set 0</button>
         <button onClick={() => this.changeDataSet(1)}>Data Set 1</button>
         <BarChart dataHash={this.state.data[this.state.currentKey].benchmarks}
