@@ -11,11 +11,23 @@
 //    axisLabelExtraPadding (default 20)
 class AxisLabelHelper {
   constructor(textNode, axisNode, props) {
+    // DOM nodes for the axis label and axis; access their heights and widths via node.getBBox.height/width methods
     this.textNode = textNode;
     this.axisNode = axisNode;
     this.props = props;
-    this.labelPositioning = props.axisLabelPosition || "middle";
-    this.extraPadding = props.axisLabelExtraPadding || 20;
+
+    // Translations applied to the axis and label
+    this.axisTranslateX = props.translateX;
+    this.axisTranslateY = props.translateY;
+
+    this.axisLabelProps = props.axisLabelProps;
+
+    // Additional translations applied to the label
+    this.labelTranslateX = this.axisLabelProps.translateX || 0;
+    this.labelTranslateY = this.axisLabelProps.translateY || 0;
+
+    this.position = this.axisLabelProps.position || "middle";
+
     this.verticalMultiplier = {
       left: 1,
       bottom: -1,
@@ -27,7 +39,7 @@ class AxisLabelHelper {
 
   // Helper function for #createTranslationObject method.
   heightTranslateHelper() {
-    switch(this.labelPositioning) {
+    switch(this.position) {
       case "middle":
         return this.props.axisLength/2 + (this.verticalMultiplier * this.textNode.getBBox().width/2);
       case "beginning":
@@ -35,23 +47,23 @@ class AxisLabelHelper {
       case "end":
         return (this.horizontalMultiplier * this.props.axisLength) + (this.verticalMultiplier * this.textNode.getBBox().width);
       default:
-        throw `Error Axis#heightTranslateHelper: no case for labelPositioning: '${labelPositioning}'`
+        throw `Error Axis#heightTranslateHelper: no case for position: '${this.position}'`
     }
   }
 
   // Returns the translateX and translateY numbers required for properly aligning the
-  // axis label based on the axisType and labelPositioning props.
+  // axis label based on the axisType and position props.
   createTranslationObject() {
     switch(this.props.axisType) {
       case "left":
         return {
-          translateX: this.props.translateX - this.axisNode.getBBox().width - this.extraPadding,
-          translateY: this.props.translateY + this.heightTranslateHelper(this.props.labelPositioning)
+          translateX: this.axisTranslateX - this.axisNode.getBBox().width + this.labelTranslateX,
+          translateY: this.axisTranslateY + this.heightTranslateHelper(this.position) + this.labelTranslateY
         };
       case "bottom":
         return {
-          translateX: this.props.translateX + this.heightTranslateHelper(this.props.labelPositioning),
-          translateY: this.props.translateY + this.axisNode.getBBox().height + this.extraPadding,
+          translateX: this.axisTranslateX + this.heightTranslateHelper(this.position) + this.labelTranslateX,
+          translateY: this.axisTranslateY + this.axisNode.getBBox().height + this.labelTranslateY,
         };
       default:
         throw `Error in Axis#positionHelper: no case for axisType: ${this.props.axisType}`;
@@ -64,7 +76,7 @@ class AxisLabelHelper {
     const transformObject = {
       translateX: translationObject.translateX,
       translateY: translationObject.translateY,
-      rotation: this.props.axisLabelRotation || 0
+      rotation: this.axisLabelProps.rotation || 0
     };
     return transformObject;
   }

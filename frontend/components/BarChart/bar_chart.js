@@ -1,37 +1,65 @@
 import React from 'react';
 import * as d3 from 'd3';
 import Axis from './axis';
+import ChartArea from './chart_area';
 
 class BarChart extends React.Component {
+  state = {
+    axisMounted: false
+  }
+
   yAxisProps = {
     axisLength: 300,
+    scaleType: "linear",
     values: this.props.dataHash.map((timeObj) => timeObj.user),
     translateX: 100,
     translateY: 30,
     axisType: "left",
-    axisLabelRotation: -90,
-    axisLabelText: "Time (seconds)"
+    axisLabelProps: {
+      rotation: -90,
+      text: "Time (seconds)",
+      translateX: -20
+    }
   };
 
   xAxisProps = {
     axisLength: 450,
+    scaleType: "band",
     translateX: 100,
     translateY: 330,
+    values: this.props.dataHash.map((timeObj) => timeObj.query_key).reverse(),
     axisType: "bottom",
-    axisLabelText: "Query"
+    tickTransformation: {
+      tickRotation: -45
+    },
+    axisLabelProps: {
+      text: "Query",
+      translateY: 20
+    }
   };
+
+  chartAreaProps = {
+    translateX: 100,
+    translateY: 330,
+    values: this.props.dataHash.map((timeObj) => timeObj.user),
+    width: 450
+  };
+
+  componentDidMount() {
+    this.setState({axisMounted: true})
+  }
 
   componentWillReceiveProps(nextProps) {
     this.yAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.user)
   }
 
   render () {
-    console.log(this.yAxisProps.values[0]);
     return (
       <svg className="chart-area">
         <g>
-          <Axis {...this.yAxisProps}/>
-          <Axis {...this.xAxisProps}/>
+          <Axis {...this.yAxisProps} axisRef={(scale) => {this.yScale = scale}}/>
+          <Axis {...this.xAxisProps} axisRef={(scale) => {this.xScale = scale}}/>
+          {/* {this.state.axisMounted && <ChartArea {...this.chartAreaProps}/>} */}
         </g>
       </svg>
     )

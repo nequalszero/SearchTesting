@@ -29,6 +29,7 @@ class App extends React.Component {
         </svg> */}
         <button onClick={() => this.changeDataSet(0)}>Data Set 0</button>
         <button onClick={() => this.changeDataSet(1)}>Data Set 1</button>
+        <br/>
         <BarChart dataHash={this.state.data[this.state.currentKey].benchmarks}
           queryKeys={this.state.queryKeys}/>
       </div>

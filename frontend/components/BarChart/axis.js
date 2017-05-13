@@ -1,18 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import { createAxisLabelTransform } from '../../lib/axis_helper';
 
+// Have not yet tested this component for right and top axes.
 class Axis extends React.Component {
   constructor(props) {
     super(props);
 
-    this.scale = d3.scaleLinear();
-    this.axis = this.selectAxisType(this.props.axisType, this.scale);
+    this.scale = this.selectScaleType(props.scaleType)
+    this.axis = this.selectAxisType(props.axisType, this.scale);
     this.updateD3(props);
   }
 
   componentDidMount() {
     this.renderAxis();
+    this.props.axisRef(this.scale);
     this.forceUpdate();
   }
 
@@ -28,6 +31,17 @@ class Axis extends React.Component {
     return createAxisLabelTransform(this.textNode, this.axisNode, this.props);
   }
 
+  selectScaleType(type) {
+    switch(type) {
+      case "linear":
+        return d3.scaleLinear();
+      case "band":
+        return d3.scaleBand();
+      default:
+        throw `Error in Axis#selectScaleType: no case for scaleType: '${type}'`
+    }
+  }
+
   selectAxisType(type, scale) {
     switch(type) {
       case "left":
@@ -40,19 +54,46 @@ class Axis extends React.Component {
   }
 
   updateD3(props) {
-    if (props.values) {
-      const dataMax = d3.max(props.values);
-
+    if (!props.values || props.values.empty()) {
       this.scale
-          .domain(d3.extent([0, dataMax*1.1]))
-          .range([props.axisLength, 0]);
+        .domain([])
+        .range([props.axisLength, 0]);
     } else {
-      this.scale.range([props.axisLength, 0]);
+      switch(typeof props.values.first()) {
+        case "string":
+          this.scale
+            .domain(props.values)
+            .range([props.axisLength, 0])
+          return
+
+        case "number":
+          const dataMax = d3.max(props.values);
+          this.scale
+            .domain(d3.extent([0, dataMax*1.1]))
+            .range([props.axisLength, 0]);
+          return
+
+        default:
+          throw `Error in Axis#updateD3: props.values has value of type ${typeof props.values.first}`;
+      }
     }
   }
 
   renderAxis() {
-    d3.select(this.axisNode).call(this.axis)
+    const tickRotation = this.props.tickTransformation ? (this.props.tickTransformation.tickRotation || 0) : 0;
+
+    const axis = d3.select(this.axisNode).call(this.axis)
+
+    if (tickRotation !== 0) {
+      const dx = this.props.tickTransformation.dx || "-0.8em";
+      const dy = this.props.tickTransformation.dy || "0.15em";
+
+      axis.selectAll('text')
+        .style('text-anchor', 'end')
+        .attr("dx", dx)
+        .attr("dy", dy)
+        .attr("transform", `rotate(${tickRotation})`);
+    }
   }
 
   render() {
@@ -63,7 +104,7 @@ class Axis extends React.Component {
           transform={`translate(${this.props.translateX}, ${this.props.translateY})`}>
         </g>
         <text transform={this.calculateAxisLabelTransform()} ref={(textNode) => this.textNode = textNode}>
-          {this.props.axisLabelText}
+          {this.props.axisLabelProps.text}
         </text>
       </g>
     )
@@ -71,15 +112,28 @@ class Axis extends React.Component {
 }
 
 Axis.propTypes = {
-  axisType: React.PropTypes.string.isRequired,
-  axisLength: React.PropTypes.number.isRequired,
-  values: React.PropTypes.array,
-  translateX: React.PropTypes.number.isRequired,
-  translateY: React.PropTypes.number.isRequired,
-  axisLabelRotation: React.PropTypes.number,
-  axisLabelText: React.PropTypes.string,
-  axisLabelPosition: React.PropTypes.string,
-  axisLabelExtraPadding: React.PropTypes.number
+  axisType: PropTypes.string.isRequired,
+  scaleType: PropTypes.string.isRequired,
+  axisLength: PropTypes.number.isRequired,
+  values: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.arrayOf(PropTypes.number),
+  ]),
+  translateX: PropTypes.number.isRequired,
+  translateY: PropTypes.number.isRequired,
+  tickTransformation: PropTypes.shape({
+    rotation: PropTypes.number,
+    dx: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    dy: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  }),
+  axisLabelProps: PropTypes.shape({
+    rotation: PropTypes.number,
+    text: PropTypes.string,
+    position: PropTypes.string,
+    translateX: PropTypes.number,
+    translateY: PropTypes.number
+  }),
+  axisRef: PropTypes.func.isRequired
 };
 
 export default Axis;
