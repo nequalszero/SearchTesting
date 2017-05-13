@@ -36,7 +36,7 @@ class Axis extends React.Component {
       case "linear":
         return d3.scaleLinear();
       case "band":
-        return d3.scaleBand();
+        return d3.scaleBand().rangeRound([0, this.props.axisLength]).padding(0.1);
       default:
         throw `Error in Axis#selectScaleType: no case for scaleType: '${type}'`
     }
@@ -79,6 +79,10 @@ class Axis extends React.Component {
     }
   }
 
+  handleTickClick = () => {
+    this.props.onTickClick();
+  }
+
   renderAxis() {
     const tickRotation = this.props.tickTransformation ? (this.props.tickTransformation.tickRotation || 0) : 0;
 
@@ -93,6 +97,15 @@ class Axis extends React.Component {
         .attr("dx", dx)
         .attr("dy", dy)
         .attr("transform", `rotate(${tickRotation})`);
+    }
+
+    if (this.props.onTickClick) {
+      this.axisNode.childNodes.forEach((node) => {
+        if (node.tagName === "g") {
+          node.removeEventListener('click', this.handleTickClick);
+          node.addEventListener('click', this.handleTickClick);
+        }
+      })
     }
   }
 
@@ -133,7 +146,8 @@ Axis.propTypes = {
     translateX: PropTypes.number,
     translateY: PropTypes.number
   }),
-  axisRef: PropTypes.func.isRequired
+  axisRef: PropTypes.func.isRequired,
+  onTickClick: PropTypes.func
 };
 
 export default Axis;
