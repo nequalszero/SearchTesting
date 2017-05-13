@@ -2,16 +2,17 @@ import React from 'react';
 import * as d3 from 'd3';
 import Axis from './axis';
 import ChartArea from './chart_area';
+import Grid from './grid';
 
 class BarChart extends React.Component {
   state = {
-    axisMounted: false
+    axesMounted: false
   }
 
   yAxisProps = {
     axisLength: 300,
     scaleType: "linear",
-    values: this.props.dataHash.map((timeObj) => timeObj.user),
+    values: this.props.dataHash.map((timeObj) => timeObj.real),
     translateX: 100,
     translateY: 30,
     axisType: "left",
@@ -19,7 +20,7 @@ class BarChart extends React.Component {
       rotation: -90,
       text: "Time (seconds)",
       translateX: -20
-    }
+    },
   };
 
   xAxisProps = {
@@ -35,13 +36,24 @@ class BarChart extends React.Component {
     axisLabelProps: {
       text: "Query",
       translateY: 20
-    }
+    },
+    barPadding: 0.25
   };
+
+  horizontalGridProps = {
+    axisLength: this.xAxisProps.axisLength,
+    translateX: this.yAxisProps.translateX,
+    translateY: this.yAxisProps.translateY,
+    axisType: this.yAxisProps.axisType,
+    values: this.props.dataHash.map((timeObj) => timeObj.real),
+    className: "gridline",
+    ticks: 10,
+  }
 
   chartAreaProps = {
     translateX: 100,
     translateY: 330,
-    data: this.props.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.user})),
+    data: this.props.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.real})),
     width: 450,
     height: 300
   };
@@ -49,13 +61,14 @@ class BarChart extends React.Component {
   componentDidMount() {
     this.chartAreaProps.xScale = this.xScale;
     this.chartAreaProps.yScale = this.yScale;
-    this.setState({axisMounted: true})
+    this.horizontalGridProps.scale = this.yScale;
+    this.setState({axesMounted: true})
   }
 
   componentWillReceiveProps(nextProps) {
-    this.yAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.user);
+    this.yAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.real);
     this.xAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.query_key).reverse();
-    this.chartAreaProps.data = nextProps.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.user}));
+    this.chartAreaProps.data = nextProps.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.real}));
   }
 
   render () {
@@ -67,7 +80,8 @@ class BarChart extends React.Component {
           <Axis {...this.xAxisProps}
             onTickClick={() => {console.log("clicked tick")}}
             axisRef={(scale) => {this.xScale = scale}}/>
-          {this.state.axisMounted && <ChartArea {...this.chartAreaProps}/>}
+          {this.state.axesMounted && <Grid {...this.horizontalGridProps}/>}
+          {this.state.axesMounted && <ChartArea {...this.chartAreaProps}/>}
         </g>
       </svg>
     )

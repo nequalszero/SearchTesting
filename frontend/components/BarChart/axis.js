@@ -36,7 +36,7 @@ class Axis extends React.Component {
       case "linear":
         return d3.scaleLinear();
       case "band":
-        return d3.scaleBand().rangeRound([0, this.props.axisLength]).padding(0.1);
+        return d3.scaleBand().rangeRound([0, this.props.axisLength]).padding(this.props.barPadding || 0.1);
       default:
         throw `Error in Axis#selectScaleType: no case for scaleType: '${type}'`
     }
@@ -108,7 +108,7 @@ class Axis extends React.Component {
       })
     }
   }
-
+yScale
   render() {
     return (
       <g>
@@ -147,6 +147,7 @@ Axis.propTypes = {
     translateY: PropTypes.number
   }),
   axisRef: PropTypes.func.isRequired,
+  barPadding: PropTypes.number,
   onTickClick: PropTypes.func
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'rearmed-js';
+
 import App from './components/app';
 import './styles/css/main.css';
 
