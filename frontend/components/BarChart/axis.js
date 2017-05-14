@@ -112,11 +112,13 @@ yScale
   render() {
     return (
       <g>
-        <g className="axis"
+        <g className={this.props.className || "axis"}
           ref={(axisNode) => this.axisNode = axisNode}
           transform={`translate(${this.props.translateX}, ${this.props.translateY})`}>
         </g>
-        <text transform={this.calculateAxisLabelTransform()} ref={(textNode) => this.textNode = textNode}>
+        <text transform={this.calculateAxisLabelTransform()}
+          ref={(textNode) => this.textNode = textNode}
+          className="axis-label">
           {this.props.axisLabelProps.text}
         </text>
       </g>

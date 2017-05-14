@@ -558,6 +558,13 @@ const applicationData = {
         ]
       }
     ]
+  },
+  "database_information": {
+    "counts": {
+      "products": 2027,
+      "tag_names": 529,
+      "tags": 26636
+    }
   }
 };
 

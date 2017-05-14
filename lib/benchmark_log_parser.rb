@@ -100,6 +100,18 @@ def parse_benchmark_log_files
   end
 
   results[:query_keys] = query_keys.to_a
+  results
+end
+
+def create_results_file
+  results = parse_benchmark_log_files()
+  results[:database_information] = {
+    counts: {
+      products: Product.count,
+      tag_names: TagName.count,
+      tags: Tag.count
+    }
+  }
 
   puts "\nWriting JSON to file"
   File.open("processed_data/results.js","w") do |f|

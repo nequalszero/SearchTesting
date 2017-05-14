@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class ChartArea extends React.Component {
+  // fill="#74d3eb" rx="3" ry="3"
   chartForeGround() {
     return this.props.data.map((dataObj, idx) => (
-      <rect fill="#74d3eb" rx="3" ry="3" key={idx}
-        x={this.props.xScale(dataObj.query_key)} y={this.props.yScale(dataObj.value) - this.props.height} className="shadow"
+      <rect key={idx} className="chart-bar"
+        x={this.props.xScale(dataObj.query_key)} y={this.props.yScale(dataObj.value) - this.props.height}
         height={this.props.height-this.props.yScale(dataObj.value)}
         width={this.props.xScale.bandwidth()}/>
     ));

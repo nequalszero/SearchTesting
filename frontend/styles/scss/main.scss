@@ -1,19 +1,2 @@
 @import "base/reset.scss";
-
-#svg {
-  width: 600px;
-  height: 200px;
-  border: 2px solid green;
-  margin-bottom: 20px;
-}
-
-.chart-area {
-  min-height: 500px;
-  min-width: 600px;
-  border: 1px solid black;
-  font: 1em sans-serif;
-}
-
-.axis {
-  font-size: 0.9em;
-}
+@import "partials/bar_chart.scss";

@@ -2,11 +2,18 @@ import React from 'react';
 import * as d3 from 'd3';
 import Axis from './axis';
 import ChartArea from './chart_area';
+import ChartTitle from './chart_title';
 import Grid from './grid';
 
 class BarChart extends React.Component {
   state = {
     axesMounted: false
+  }
+
+  chartTitleProps = {
+    text: this.props.currentKey,
+    translateX: 325,
+    translateY: 25
   }
 
   yAxisProps = {
@@ -37,7 +44,8 @@ class BarChart extends React.Component {
       text: "Query",
       translateY: 20
     },
-    barPadding: 0.25
+    barPadding: 0.25,
+    className: "axis axis-x"
   };
 
   horizontalGridProps = {
@@ -69,12 +77,14 @@ class BarChart extends React.Component {
     this.yAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.real);
     this.xAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.query_key).reverse();
     this.chartAreaProps.data = nextProps.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.real}));
+    this.chartTitleProps.text = nextProps.currentKey;
   }
 
   render () {
     return (
       <svg className="chart-area">
         <g>
+          <ChartTitle {...this.chartTitleProps}/>
           <Axis {...this.yAxisProps}
             axisRef={(scale) => {this.yScale = scale}}/>
           <Axis {...this.xAxisProps}
