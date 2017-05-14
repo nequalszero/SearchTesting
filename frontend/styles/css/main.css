@@ -56,18 +56,70 @@ input[type="submit"] {
   clear: both;
 }
 
-#svg {
-  width: 600px;
-  height: 200px;
-  border: 2px solid green;
-  margin-bottom: 20px;
-}
-
 .chart-area {
   min-height: 500px;
   min-width: 600px;
   border: 1px solid black;
   font: 1em sans-serif;
+  box-sizing: border-box;
+}
+
+.data-selector {
+  background-color: white;
+}
+
+.data-selector-list {
+  position: relative;
+  border: 1px solid black;
+}
+
+.data-selector-list .dropdown {
+  position: absolute;
+  border: 1px solid black;
+  border-top: none;
+  background-color: white;
+}
+
+.data-selector-list .hidden {
+  display: none;
+}
+
+.data-selector .expanded {
+  border-bottom: none;
+}
+
+.data-selector-item {
+  padding: 10px 5px;
+  border-bottom: 1px solid gray;
+}
+
+.data-selector-item:last-child {
+  border-bottom: none;
+}
+
+@media all and (max-width: 900px) {
+  .chart-container {
+    display: block;
+  }
+  .data-selector {
+    width: 600px;
+  }
+}
+
+@media all and (min-width: 901px) {
+  .chart-container {
+    display: flex;
+  }
+  .data-selector {
+    width: 300px;
+  }
+}
+
+#svg {
+  width: 600px;
+  height: 200px;
+  border: 1px solid green;
+  margin-bottom: 20px;
 }
 
 .axis {

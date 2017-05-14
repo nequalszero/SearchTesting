@@ -25,7 +25,7 @@ export const constructDataKeysAndDataMap = (applicationData) => {
     if (Array.isArray(data)) {
       data.forEach((subset) => {
         if (!subset.details) throw "Error in application_data_helper#constructDataMap: subset missing details key";
-        let newDataKey = constructDataKey((dataKey, subset.details))
+        let newDataKey = constructDataKey(dataKey, subset.details)
         dataKeys.push(newDataKey);
         dataMap[newDataKey] = subset;
       })
