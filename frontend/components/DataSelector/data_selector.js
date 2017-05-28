@@ -29,6 +29,7 @@ const DataSelector = (props) => {
 
   return (
     <div className="data-selector">
+      <p>Current Dataset: </p>
       <ul className={listClassName()}>
         <DataSelectorItem handleClick={props.toggleDropDown}
           dataKey={props.currentKey}

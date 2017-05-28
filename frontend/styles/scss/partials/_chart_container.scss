@@ -8,47 +8,12 @@ $chart-area-width: 600px;
   box-sizing: border-box;
 }
 
-.data-selector {
-  background-color: white;
-
-  &-list {
-    position: relative;
-    border: 1px solid black;
-
-    .dropdown {
-      position: absolute;
-      border: 1px solid black;
-      border-top: none;
-      background-color: white;
-    }
-
-    .hidden {
-      display: none;
-    }
-  }
-
-  .expanded {
-    border-bottom: none;
-  }
-
-  .current-selection {
-  }
-
-  &-item {
-    padding: 10px 5px;
-    border-bottom: 1px solid gray;
-  }
-
-  &-item:last-child {
-    border-bottom: none;
-  }
-}
-
 @media all and (max-width: 900px) {
   .chart-container {
     display: block;
   }
   .data-selector {
+    flex-direction: row;
     width: $chart-area-width;
   }
 }
@@ -58,6 +23,7 @@ $chart-area-width: 600px;
     display: flex;
   }
   .data-selector {
+    flex-direction: column;
     width: 300px;
   }
 }

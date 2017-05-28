@@ -18,7 +18,10 @@ Compare the differences in search query times for Postgresql hstore, jsonb, and 
 4. Delete the username and password information in `config/database.yml`
 5. Run  `rake db:setup` to configure and populate the database.  
 6. Follow directions below in `Backend Usage Information` section for notes on running benchmarks and updating the data accessed by the front end.
-7. Useful commands to run for developing the front end are `npm start` and `npm run build:sass -- -w`. These commands, found in the `package.json` file will fire up the `webpack-dev-server` which will listen for changes to `JavaScript` and `CSS` files, and recompile `SCSS` files to `CSS` upon save. All styling files are found in the `frontend/styles` `CSS` and `SCSS` subfolders.
+7. Useful commands to run for developing the front end are:
+  * `npm start`, which fires up the `webpack-dev-server` and essentially listens for changes to `.js` and `.css` files.
+  * `npm run build:sass -- -w`, which recompiles `SCSS` files found in `frontend/styles/` to `CSS` files on save.
+
 
 ## Backend Usage Information
 Enter the `rails console`. Load the benchmarking file by typing `load 'lib/product_benchmark.rb'`.  The functions that perform benchmarking are `test_search_methods`, `search_for_products`, and `realistic_product_search`.
