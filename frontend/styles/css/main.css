@@ -95,49 +95,6 @@ input[type="submit"] {
   padding: 10px 5px;
 }
 
-.data-selector-list {
-  position: relative;
-  border: 1px solid black;
-  white-space: nowrap;
-  width: 356px;
-  height: 29px;
-  box-sizing: border-box;
-}
-
-.data-selector-list .dropdown {
-  position: absolute;
-  left: -1px;
-  top: 29px;
-  border: 1px solid black;
-  border-top: none;
-  background-color: white;
-}
-
-.data-selector-list .hidden {
-  display: none;
-}
-
-.data-selector-list:hover {
-  cursor: pointer;
-}
-
-.data-selector .expanded {
-  border-bottom: none;
-}
-
-.data-selector-item {
-  padding: 5px 10px;
-  border-bottom: 1px solid gray;
-}
-
-.data-selector-item:hover {
-  background-color: #bdbdbd;
-}
-
-.data-selector-item:last-child {
-  border-bottom: none;
-}
-
 #svg {
   width: 600px;
   height: 200px;

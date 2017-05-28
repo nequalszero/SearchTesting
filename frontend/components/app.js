@@ -16,17 +16,12 @@ class App extends React.Component {
     this.queryKeys = applicationData.query_keys;
 
     this.state = {
-      currentKey: this.dataKeys[0],
-      dropDownOpen: false
+      currentKey: this.dataKeys[0]
     };
   }
 
   changeDataSet = (dataKey) => {
-    this.setState({currentKey: dataKey, dropDownOpen: false});
-  }
-
-  toggleDropDown = () => {
-    this.setState({dropDownOpen: !this.state.dropDownOpen});
+    this.setState({currentKey: dataKey});
   }
 
   selectDataSet(dataKey) {
@@ -40,9 +35,7 @@ class App extends React.Component {
         <div className="chart-container">
           <DataSelector handleSelection={(dataKey) => this.changeDataSet(dataKey)}
             dataKeys={this.dataKeys}
-            currentKey={this.state.currentKey}
-            toggleDropDown={this.toggleDropDown}
-            dropDownOpen={this.state.dropDownOpen}/>
+            currentKey={this.state.currentKey}/>
           <BarChart dataHash={this.selectDataSet(this.state.currentKey).benchmarks}
             queryKeys={this.queryKeys}
             currentKey={this.state.currentKey}/>

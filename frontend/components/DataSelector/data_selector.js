@@ -13,35 +13,20 @@ const DataSelector = (props) => {
     ];
   }
 
-  const listClassName = () => {
-    return classNames({
-      "data-selector-list": true,
-      expanded: props.dropDownOpen
-    });
-  }
-
-  const dropdownClassname = () => {
-    return classNames({
-      hidden: !props.dropDownOpen,
-      dropdown: true
-    });
-  }
-
   return (
     <div className="data-selector">
       <p>Current Dataset: </p>
-      <ul className={listClassName()}>
-        <DataSelectorItem handleClick={props.toggleDropDown}
-          dataKey={props.currentKey}
-          className="current-selection"/>
-        <ul className={dropdownClassname()}>
-          {nonSelectedDataKeys().map((dataKey, idx) => (
-            <DataSelectorItem key={idx}
-              handleClick={() => props.handleSelection(dataKey)}
-              dataKey={dataKey}/>
-          ))}
-        </ul>
-      </ul>
+      <select value={props.currentKey}
+        onChange={(e) => {debugger; props.handleSelection(e.target.value)}}>
+        <option value={true}>Yes</option>
+        <option value={false}>No</option>
+        {/* {nonSelectedDataKeys().map((dataKey, idx) => (
+          <option key={dataKey}
+            value={dataKey}>
+            {dataKey}
+          </option>
+        ))} */}
+      </select>
     </div>
   )
 }
