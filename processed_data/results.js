@@ -14,7 +14,8 @@ const applicationData = {
   "data": {
     "realistic_product_search": {
       "details": {
-        "queries": 1000
+        "queries": 1000,
+        "description": "The graph below shows the result of making 1000 queries using commonly paired keywords."
       },
       "benchmarks": [
         {
@@ -91,7 +92,8 @@ const applicationData = {
     },
     "product_search": {
       "details": {
-        "queries": 1000
+        "queries": 1000,
+        "description": "The graph below shows the result of making 1000 queries using the full keyword description of a random product."
       },
       "benchmarks": [
         {
@@ -170,7 +172,8 @@ const applicationData = {
       {
         "details": {
           "queries": 500,
-          "keywords": 2
+          "keywords": 2,
+          "description": "The graph below shows the result of making 500 queries of 2 keywords each. The keywords were randomly selected from the tag_names table."
         },
         "benchmarks": [
           {
@@ -248,7 +251,8 @@ const applicationData = {
       {
         "details": {
           "queries": 500,
-          "keywords": 5
+          "keywords": 5,
+          "description": "The graph below shows the result of making 500 queries of 5 keywords each. The keywords were randomly selected from the tag_names table."
         },
         "benchmarks": [
           {
@@ -326,7 +330,8 @@ const applicationData = {
       {
         "details": {
           "queries": 500,
-          "keywords": 10
+          "keywords": 10,
+          "description": "The graph below shows the result of making 500 queries of 10 keywords each. The keywords were randomly selected from the tag_names table."
         },
         "benchmarks": [
           {
@@ -404,7 +409,8 @@ const applicationData = {
       {
         "details": {
           "queries": 500,
-          "keywords": 1
+          "keywords": 1,
+          "description": "The graph below shows the result of making 500 queries of 1 keywords each. The keywords were randomly selected from the tag_names table."
         },
         "benchmarks": [
           {
@@ -482,7 +488,8 @@ const applicationData = {
       {
         "details": {
           "queries": 500,
-          "keywords": 15
+          "keywords": 15,
+          "description": "The graph below shows the result of making 500 queries of 15 keywords each. The keywords were randomly selected from the tag_names table."
         },
         "benchmarks": [
           {
@@ -561,9 +568,9 @@ const applicationData = {
   },
   "database_information": {
     "counts": {
-      "products": 2027,
-      "tag_names": 529,
-      "tags": 26636
+      "products": 2107,
+      "tag_names": 563,
+      "tags": 27850
     }
   }
 };

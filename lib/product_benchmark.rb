@@ -1,6 +1,6 @@
+require_relative './seeding_helpers/sleeping_bag_helper'
+require_relative './seeding_helpers/tent_helper'
 require_relative './product_seed_helper'
-require_relative './sleeping_bag_helper'
-require_relative './tent_helper'
 require 'pp'
 
 # Suppress ActiveRecord SQL that is logged when using find_by_sql

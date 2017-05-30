@@ -1,6 +1,6 @@
-require_relative './sleeping_bag_helper'
-require_relative './tent_helper'
-require_relative './common_features'
+require_relative './seeding_helpers/sleeping_bag_helper'
+require_relative './seeding_helpers/tent_helper'
+require_relative './seeding_helpers/common_features'
 
 def batch_seed_sleeping_bags
   batches = {products: [], tag_names: [], tags: []}

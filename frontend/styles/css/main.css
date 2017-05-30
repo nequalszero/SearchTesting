@@ -68,31 +68,65 @@ input[type="submit"] {
   .chart-container {
     display: block;
   }
-  .data-selector {
-    flex-direction: row;
-    width: 600px;
-  }
 }
 
 @media all and (min-width: 901px) {
   .chart-container {
     display: flex;
   }
-  .data-selector {
+}
+
+.data-selection-container {
+  display: flex;
+  justify-content: flex-start;
+  border: 1px solid red;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.data-selection-container .data-selection-area, .data-selection-container .description-area {
+  display: flex;
+}
+
+.data-selection-container .data-selection-area h4, .data-selection-container .description-area h4 {
+  margin: 0px;
+  padding: 10px 5px;
+  padding-left: 0px;
+  white-space: nowrap;
+}
+
+.data-selection-container select {
+  padding: 10px 5px;
+}
+
+@media all and (max-width: 900px) {
+  .data-selection-container {
     flex-direction: column;
-    width: 300px;
+    width: 600px;
+  }
+  .data-selection-container .data-selection-area {
+    flex-direction: row;
+  }
+  .data-selection-container .description-area {
+    flex-direction: column;
+  }
+  .data-selection-container .description-area h4 {
+    padding: 10px 5px;
+    padding-left: 0px;
   }
 }
 
-.data-selector {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border: 1px solid red;
-}
-
-.data-selector p {
-  padding: 10px 5px;
+@media all and (min-width: 901px) {
+  .data-selection-container {
+    flex-direction: column;
+    width: auto;
+  }
+  .data-selection-container .description-area {
+    flex-direction: column;
+  }
+  .data-selection-container .description-area p {
+    padding-top: 20px;
+  }
 }
 
 #svg {

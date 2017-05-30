@@ -1,17 +1,39 @@
 require 'set'
 
+def query_type_description(params)
+  raise "Error in benchmark_log_parser.rb #query_type_description - params :queries key missing" unless params[:queries]
+
+  case params[:type]
+  when :random_keyword_search
+    raise "Error in benchmark_log_parser.rb #query_type_description - params :keywords key missing" unless params[:keywords]
+
+    return "The graph below shows the result of making #{params[:queries]} queries of #{params[:keywords]} keywords each. The keywords were randomly selected from the tag_names table."
+  when :product_search
+    return "The graph below shows the result of making #{params[:queries]} queries using the full keyword description of a random product."
+
+  when :realistic_product_search
+    return "The graph below shows the result of making #{params[:queries]} queries using commonly paired keywords."
+
+  else
+    raise "Error in benchmark_log_parser.rb #query_type_description - params :type key is missing/invalid"
+  end
+end
+
 # Determines the number of queries made and the type of benchmark conducted
 def determine_file_contents(filename)
   case filename[0]
   when 'k'
     /kw_(?<keywords>\d+)_q_(?<queries>\d+)/ =~ filename
-    return {keywords: keywords.to_i, queries: queries.to_i, type: :random_keyword_search}
+    description = query_type_description({keywords: keywords, queries: queries, type: :random_keyword_search})
+    return {keywords: keywords.to_i, queries: queries.to_i, type: :random_keyword_search, description: description}
   when 'p'
     /q_(?<queries>\d+)/ =~ filename
-    return {queries: queries.to_i, type: :product_search}
+    description = query_type_description({queries: queries, type: :product_search})
+    return {queries: queries.to_i, type: :product_search, description: description}
   when 'r'
     /q_(?<queries>\d+)/ =~ filename
-    return {queries: queries.to_i, type: :realistic_product_search}
+    description = query_type_description({queries: queries, type: :realistic_product_search})
+    return {queries: queries.to_i, type: :realistic_product_search, description: description}
   else
     raise "Invalid starting letter for file #{filename}"
   end
@@ -22,18 +44,19 @@ end
 def prepare_and_select_result_section(results, file_info)
   case file_info[:type]
   when :realistic_product_search
-    results[:data][:realistic_product_search][:details] = {queries: file_info[:queries]}
+    results[:data][:realistic_product_search][:details] = {queries: file_info[:queries], description: file_info[:description]}
     return results[:data][:realistic_product_search][:benchmarks] = [];
 
   when :product_search
-    results[:data][:product_search][:details] = {queries: file_info[:queries]}
+    results[:data][:product_search][:details] = {queries: file_info[:queries], description: file_info[:description]}
     return results[:data][:product_search][:benchmarks] = [];
 
   when :random_keyword_search
     new_record = {
       details: {
         queries: file_info[:queries],
-        keywords: file_info[:keywords]
+        keywords: file_info[:keywords],
+        description: file_info[:description]
       },
       benchmarks: []
     }

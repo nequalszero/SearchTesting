@@ -27010,11 +27010,7 @@ var App = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.changeDataSet = function (dataKey) {
-      _this.setState({ currentKey: dataKey, dropDownOpen: false });
-    };
-
-    _this.toggleDropDown = function () {
-      _this.setState({ dropDownOpen: !_this.state.dropDownOpen });
+      _this.setState({ currentKey: dataKey });
     };
 
     var _constructDataKeysAnd = (0, _application_data_helper.constructDataKeysAndDataMap)(_results2.default);
@@ -27025,8 +27021,7 @@ var App = function (_React$Component) {
     _this.queryKeys = _results2.default.query_keys;
 
     _this.state = {
-      currentKey: _this.dataKeys[0],
-      dropDownOpen: false
+      currentKey: _this.dataKeys[0]
     };
     return _this;
   }
@@ -27056,9 +27051,7 @@ var App = function (_React$Component) {
               return _this2.changeDataSet(dataKey);
             },
             dataKeys: this.dataKeys,
-            currentKey: this.state.currentKey,
-            toggleDropDown: this.toggleDropDown,
-            dropDownOpen: this.state.dropDownOpen }),
+            currentKey: this.state.currentKey }),
           _react2.default.createElement(_BarChart2.default, { dataHash: this.selectDataSet(this.state.currentKey).benchmarks,
             queryKeys: this.queryKeys,
             currentKey: this.state.currentKey })
@@ -29572,46 +29565,23 @@ var DataSelector = function DataSelector(props) {
     return [].concat(_toConsumableArray(props.dataKeys.slice(0, selectedIndex)), _toConsumableArray(props.dataKeys.slice(selectedIndex + 1)));
   };
 
-  var listClassName = function listClassName() {
-    return (0, _classnames2.default)({
-      "data-selector-list": true,
-      expanded: props.dropDownOpen
-    });
+  var handleSelection = function handleSelection() {
+    props.handleSelection(e.target.value);
   };
 
-  var dropdownClassname = function dropdownClassname() {
-    return (0, _classnames2.default)({
-      hidden: !props.dropDownOpen,
-      dropdown: true
-    });
-  };
+  console.log(props.currentKey);
+  console.log(props.dataKeys);
 
   return _react2.default.createElement(
     'div',
     { className: 'data-selector' },
     _react2.default.createElement(
-      'p',
+      'h2',
       null,
       'Current Dataset: '
     ),
-    _react2.default.createElement(
-      'ul',
-      { className: listClassName() },
-      _react2.default.createElement(_data_selector_item2.default, { handleClick: props.toggleDropDown,
-        dataKey: props.currentKey,
-        className: 'current-selection' }),
-      _react2.default.createElement(
-        'ul',
-        { className: dropdownClassname() },
-        nonSelectedDataKeys().map(function (dataKey, idx) {
-          return _react2.default.createElement(_data_selector_item2.default, { key: idx,
-            handleClick: function handleClick() {
-              return props.handleSelection(dataKey);
-            },
-            dataKey: dataKey });
-        })
-      )
-    )
+    _react2.default.createElement('select', { value: props.currentKey,
+      onChange: handleSelection })
   );
 };
 
@@ -29686,6 +29656,8 @@ exports.default = _data_selector2.default;
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(10);
 
 var _react2 = _interopRequireDefault(_react);
@@ -29704,9 +29676,84 @@ __webpack_require__(88);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var FlavorForm = function (_React$Component) {
+  _inherits(FlavorForm, _React$Component);
+
+  function FlavorForm(props) {
+    _classCallCheck(this, FlavorForm);
+
+    var _this = _possibleConstructorReturn(this, (FlavorForm.__proto__ || Object.getPrototypeOf(FlavorForm)).call(this, props));
+
+    _this.state = { value: 'coconut' };
+
+    _this.handleChange = _this.handleChange.bind(_this);
+    _this.handleSubmit = _this.handleSubmit.bind(_this);
+    return _this;
+  }
+
+  _createClass(FlavorForm, [{
+    key: 'handleChange',
+    value: function handleChange(event) {
+      this.setState({ value: event.target.value });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(event) {
+      alert('Your favorite flavor is: ' + this.state.value);
+      event.preventDefault();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'form',
+        { onSubmit: this.handleSubmit },
+        _react2.default.createElement(
+          'label',
+          null,
+          'Pick your favorite La Croix flavor:',
+          _react2.default.createElement(
+            'select',
+            { value: this.state.value, onChange: this.handleChange },
+            _react2.default.createElement(
+              'option',
+              { value: 'grapefruit' },
+              'Grapefruit'
+            ),
+            _react2.default.createElement(
+              'option',
+              { value: 'lime' },
+              'Lime'
+            ),
+            _react2.default.createElement(
+              'option',
+              { value: 'coconut' },
+              'Coconut'
+            ),
+            _react2.default.createElement(
+              'option',
+              { value: 'mango' },
+              'Mango'
+            )
+          )
+        ),
+        _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
+      );
+    }
+  }]);
+
+  return FlavorForm;
+}(_react2.default.Component);
+
 document.addEventListener('DOMContentLoaded', function () {
   var rootEl = document.getElementById('root');
-  _reactDom2.default.render(_react2.default.createElement(_app2.default, null), rootEl);
+  _reactDom2.default.render(_react2.default.createElement(FlavorForm, null), rootEl);
 });
 
 /***/ }),
@@ -30472,7 +30519,7 @@ exports = module.exports = __webpack_require__(105)();
 
 
 // module
-exports.push([module.i, "/* PHASE 0: Reset */\nhtml, body, header, nav, h1, a,\nul, li, strong, main, button, i,\nsection, img, div, h2, p, form,\nfieldset, label, input, textarea,\nspan, article, footer, time, small {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  outline: 0;\n  font: inherit;\n  color: inherit;\n  text-align: inherit;\n  text-decoration: inherit;\n  vertical-align: inherit;\n  box-sizing: inherit;\n  background: transparent;\n}\n\nbody {\n  font-family: \"Helvetica Neue, Helvetica, Liberation Sans, Arial, sans-serif\";\n}\n\nul {\n  list-style: none;\n}\n\nimg {\n  display: block;\n}\n\ninput[type=\"password\"],\ninput[type=\"email\"],\ninput[type=\"text\"],\ninput[type=\"submit\"],\ntextarea,\nbutton {\n  /*\n  Get rid of native styling. Read more here:\n  http://css-tricks.com/almanac/properties/a/appearance/\n  */\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n\nbutton,\ninput[type=\"submit\"] {\n  cursor: pointer;\n}\n\n/* Clearfix */\n.group:after {\n  content: \"\";\n  display: block;\n  clear: both;\n}\n\n.chart-area {\n  min-height: 500px;\n  min-width: 600px;\n  border: 1px solid black;\n  font: 1em sans-serif;\n  box-sizing: border-box;\n}\n\n@media all and (max-width: 900px) {\n  .chart-container {\n    display: block;\n  }\n  .data-selector {\n    flex-direction: row;\n    width: 600px;\n  }\n}\n\n@media all and (min-width: 901px) {\n  .chart-container {\n    display: flex;\n  }\n  .data-selector {\n    flex-direction: column;\n    width: 300px;\n  }\n}\n\n.data-selector {\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  border: 1px solid red;\n}\n\n.data-selector p {\n  padding: 10px 5px;\n}\n\n.data-selector-list {\n  position: relative;\n  border: 1px solid black;\n  white-space: nowrap;\n  width: 356px;\n  height: 29px;\n  box-sizing: border-box;\n}\n\n.data-selector-list .dropdown {\n  position: absolute;\n  left: -1px;\n  top: 29px;\n  border: 1px solid black;\n  border-top: none;\n  background-color: white;\n}\n\n.data-selector-list .hidden {\n  display: none;\n}\n\n.data-selector-list:hover {\n  cursor: pointer;\n}\n\n.data-selector .expanded {\n  border-bottom: none;\n}\n\n.data-selector-item {\n  padding: 5px 10px;\n  border-bottom: 1px solid gray;\n}\n\n.data-selector-item:hover {\n  background-color: #bdbdbd;\n}\n\n.data-selector-item:last-child {\n  border-bottom: none;\n}\n\n#svg {\n  width: 600px;\n  height: 200px;\n  border: 1px solid green;\n  margin-bottom: 20px;\n}\n\n.axis {\n  font-size: 0.9em;\n}\n\n.axis-label {\n  font-weight: bold;\n}\n\n.axis-x > g.tick > text {\n  font-style: italic;\n  font-weight: bolder;\n}\n\n.axis-x > g.tick > text:hover {\n  cursor: pointer;\n  fill: #17416e;\n}\n\n.chart-title {\n  font-weight: bold;\n}\n\n.chart-bar {\n  fill: #74d3eb;\n  border-top-right-radius: 3px;\n  border-top-left-radius: 3px;\n}\n\n.chart-bar:hover {\n  cursor: pointer;\n  fill: #17416e;\n}\n\n.gridline > g.tick > line {\n  stroke: #ececed;\n  border: 0px 0px;\n}\n", ""]);
+exports.push([module.i, "/* PHASE 0: Reset */\nhtml, body, header, nav, h1, a,\nul, li, strong, main, button, i,\nsection, img, div, h2, p, form,\nfieldset, label, input, textarea,\nspan, article, footer, time, small {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  outline: 0;\n  font: inherit;\n  color: inherit;\n  text-align: inherit;\n  text-decoration: inherit;\n  vertical-align: inherit;\n  box-sizing: inherit;\n  background: transparent;\n}\n\nbody {\n  font-family: \"Helvetica Neue, Helvetica, Liberation Sans, Arial, sans-serif\";\n}\n\nul {\n  list-style: none;\n}\n\nimg {\n  display: block;\n}\n\ninput[type=\"password\"],\ninput[type=\"email\"],\ninput[type=\"text\"],\ninput[type=\"submit\"],\ntextarea,\nbutton {\n  /*\n  Get rid of native styling. Read more here:\n  http://css-tricks.com/almanac/properties/a/appearance/\n  */\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n\nbutton,\ninput[type=\"submit\"] {\n  cursor: pointer;\n}\n\n/* Clearfix */\n.group:after {\n  content: \"\";\n  display: block;\n  clear: both;\n}\n\n.chart-area {\n  min-height: 500px;\n  min-width: 600px;\n  border: 1px solid black;\n  font: 1em sans-serif;\n  box-sizing: border-box;\n}\n\n@media all and (max-width: 900px) {\n  .chart-container {\n    display: block;\n  }\n  .data-selector {\n    flex-direction: row;\n    width: 600px;\n  }\n}\n\n@media all and (min-width: 901px) {\n  .chart-container {\n    display: flex;\n  }\n  .data-selector {\n    flex-direction: column;\n    width: 300px;\n  }\n}\n\n.data-selector {\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  border: 1px solid red;\n}\n\n.data-selector p {\n  padding: 10px 5px;\n}\n\n#svg {\n  width: 600px;\n  height: 200px;\n  border: 1px solid green;\n  margin-bottom: 20px;\n}\n\n.axis {\n  font-size: 0.9em;\n}\n\n.axis-label {\n  font-weight: bold;\n}\n\n.axis-x > g.tick > text {\n  font-style: italic;\n  font-weight: bolder;\n}\n\n.axis-x > g.tick > text:hover {\n  cursor: pointer;\n  fill: #17416e;\n}\n\n.chart-title {\n  font-weight: bold;\n}\n\n.chart-bar {\n  fill: #74d3eb;\n  border-top-right-radius: 3px;\n  border-top-left-radius: 3px;\n}\n\n.chart-bar:hover {\n  cursor: pointer;\n  fill: #17416e;\n}\n\n.gridline > g.tick > line {\n  stroke: #ececed;\n  border: 0px 0px;\n}\n", ""]);
 
 // exports
 

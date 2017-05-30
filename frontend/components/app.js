@@ -2,7 +2,7 @@ import React from 'react';
 import applicationData from '../../processed_data/results.js';
 import ColorBar from './D3Test/color_bar';
 import BarChart from './BarChart';
-import DataSelector from  './DataSelector';
+import DataSelectionArea from  './DataSelectionArea';
 
 // Function that processes the applicationData, extracting nested data objects.
 // Returns a dataKeys array and dataMap object that maps dataKeys to the data objects.
@@ -25,18 +25,17 @@ class App extends React.Component {
   }
 
   selectDataSet(dataKey) {
-    return this.dataMap[dataKey];
+    return this.dataMap[dataKey].benchmarks;
   }
 
   render() {
     return (
       <div className="app-container">
-        <h1>This is the App file</h1>
         <div className="chart-container">
-          <DataSelector handleSelection={(dataKey) => this.changeDataSet(dataKey)}
+          <DataSelectionArea handleSelection={(dataKey) => this.changeDataSet(dataKey)}
             dataKeys={this.dataKeys}
             currentKey={this.state.currentKey}/>
-          <BarChart dataHash={this.selectDataSet(this.state.currentKey).benchmarks}
+          <BarChart dataHash={this.selectDataSet(this.state.currentKey)}
             queryKeys={this.queryKeys}
             currentKey={this.state.currentKey}/>
         </div>

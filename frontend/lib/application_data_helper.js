@@ -6,7 +6,7 @@ const constructDataKey = (dataKey, details = null) => {
     return `${dataKey}`;
   }
   if (!details.queries || !details.keywords) throw "Error in application_data_helper#constructDataKey: details missing queries or keywords key."
-  return `${dataKey} queries: ${details.queries} keywords: ${details.keywords}`;
+  return `${dataKey} - queries: ${details.queries} keywords: ${details.keywords}`;
 }
 
 // Processes applicationData object and returns a new object with a dataKeys array

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'rearmed-js';
+import './lib/monkey_patches';
 
 import App from './components/app';
 import './styles/css/main.css';
