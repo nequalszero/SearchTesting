@@ -1,5 +1,7 @@
 @import "base/reset.scss";
-@import "partials/chart_container.scss";
+@import "base/variables.scss";
 @import "partials/data_selector.scss";
+@import "partials/data_container.scss";
 @import "partials/bar_chart.scss";
+@import "partials/sidebar.scss";
 @import "partials/schema_gist.scss";

@@ -84,7 +84,7 @@ class BarChart extends React.Component {
 
   render () {
     return (
-      <svg className="chart-area">
+      <svg className="bar-chart-area">
         <g>
           <ChartTitle {...this.chartTitleProps}/>
           <Axis {...this.yAxisProps}

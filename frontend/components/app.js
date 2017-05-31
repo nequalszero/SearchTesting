@@ -3,6 +3,7 @@ import React from 'react';
 import applicationData from '../../processed_data/results.js';
 import ColorBar from './D3Test/color_bar';
 import BarChart from './BarChart';
+import Sidebar from './Sidebar';
 import DataSelectionArea from  './DataSelectionArea';
 import SchemaGist from './SchemaGist';
 
@@ -20,7 +21,12 @@ class App extends React.Component {
 
     this.state = {
       currentKey: this.dataKeys[0],
-      schemaGistOpen: false
+      schemaGistOpen: false,
+      sidebar: {
+        activePanel: 'benchmark',
+        queryGistId: null,
+        benchmark: null
+      }
     };
   }
 
@@ -36,27 +42,37 @@ class App extends React.Component {
     this.setState({schemaGistOpen: !this.state.schemaGistOpen});
   }
 
+  selectSidebarPanel = (field) => {
+    const sidebar = this.state.sidebar;
+    sidebar.activePanel = field;
+    this.setState({sidebar});
+  }
+
   render() {
     const benchmarks = this.selectDataSet(this.state.currentKey).benchmarks;
     const description = this.selectDataSet(this.state.currentKey).details.description;
     const chartProps = {
       xAxisLength: 450,
       yAxisLength: 300,
-      translateX: 100,
+      translateX: 80,
       translateY: 70
     };
 
     return (
       <div className="app-container">
-        <div className="chart-container">
+        <div className="data-selector-and-chart-area">
           <DataSelectionArea handleSelection={(dataKey) => this.changeDataSet(dataKey)}
             dataKeys={this.dataKeys}
             currentKey={this.state.currentKey}
             description={description}/>
-          <BarChart dataHash={benchmarks}
-            queryKeys={this.queryKeys}
-            currentKey={this.state.currentKey}
-            {...chartProps}/>
+          <div className="bar-chart-and-sidebar-container">
+            <BarChart dataHash={benchmarks}
+              queryKeys={this.queryKeys}
+              currentKey={this.state.currentKey}
+              {...chartProps}/>
+            <Sidebar {...this.state.sidebar}
+              handlePanelSelect={(field) => this.selectSidebarPanel(field)}/>
+          </div>
         </div>
         <SchemaGist handleClick={this.toggleSchemaGist}
           schemaGistOpen={this.state.schemaGistOpen}

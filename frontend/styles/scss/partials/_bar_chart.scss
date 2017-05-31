@@ -1,8 +1,10 @@
-#svg {
-  width: 600px;
-  height: 200px;
-  border: 1px solid green;
-  margin-bottom: 20px;
+.bar-chart-area {
+  display: block;
+  height: $data-area-height;
+  width: $bar-chart-area-width;
+  border: 1px solid black;
+  font: 1em sans-serif;
+  box-sizing: border-box;
 }
 
 .axis {
@@ -29,8 +31,6 @@
 
 .chart-bar {
   fill: #74d3eb;
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
 
   &:hover {
     cursor: pointer;

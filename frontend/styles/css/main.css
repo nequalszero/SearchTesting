@@ -56,20 +56,11 @@ input[type="submit"] {
   clear: both;
 }
 
-.chart-area {
-  display: block;
-  height: 550px;
-  width: 600px;
-  border: 1px solid black;
-  font: 1em sans-serif;
-  box-sizing: border-box;
-}
-
 .data-selection-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 600px;
+  width: 975px;
   border: 1px solid black;
   box-sizing: border-box;
   padding: 20px;
@@ -96,15 +87,22 @@ input[type="submit"] {
 }
 
 .data-selection-container select {
-  padding: 5px 5px;
+  padding: 0px 5px;
   height: auto;
 }
 
-#svg {
-  width: 600px;
-  height: 200px;
-  border: 1px solid green;
-  margin-bottom: 20px;
+.bar-chart-and-sidebar-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.bar-chart-area {
+  display: block;
+  height: 550px;
+  width: 575px;
+  border: 1px solid black;
+  font: 1em sans-serif;
+  box-sizing: border-box;
 }
 
 .axis {
@@ -131,8 +129,6 @@ input[type="submit"] {
 
 .chart-bar {
   fill: #74d3eb;
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
 }
 
 .chart-bar:hover {
@@ -143,6 +139,37 @@ input[type="submit"] {
 .gridline > g.tick > line {
   stroke: #ececed;
   border: 0px 0px;
+}
+
+.sidebar-container {
+  box-sizing: border-box;
+  width: 400px;
+  height: 550px;
+  border: 1px solid black;
+}
+
+.sidebar-container .panels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  list-style: none;
+}
+
+.sidebar-container .panels li {
+  font: 16px sans-serif;
+  width: 50%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid black;
+  text-align: center;
+}
+
+.sidebar-container .panels li:hover {
+  cursor: pointer;
+}
+
+.sidebar-container .panels li.left {
+  border-right: 1px solid black;
 }
 
 .schema-gist {
