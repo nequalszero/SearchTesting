@@ -57,31 +57,23 @@ input[type="submit"] {
 }
 
 .chart-area {
+  display: block;
   min-height: 500px;
-  min-width: 600px;
+  width: 600px;
   border: 1px solid black;
   font: 1em sans-serif;
   box-sizing: border-box;
 }
 
-@media all and (max-width: 900px) {
-  .chart-container {
-    display: block;
-  }
-}
-
-@media all and (min-width: 901px) {
-  .chart-container {
-    display: flex;
-  }
-}
-
 .data-selection-container {
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  border: 1px solid red;
+  width: 600px;
+  border: 1px solid black;
   box-sizing: border-box;
   padding: 20px;
+  height: 155px;
 }
 
 .data-selection-container .data-selection-area, .data-selection-container .description-area {
@@ -95,38 +87,17 @@ input[type="submit"] {
   white-space: nowrap;
 }
 
+.data-selection-container .data-selection-area {
+  flex-direction: row;
+}
+
+.data-selection-container .description-area {
+  flex-direction: column;
+}
+
 .data-selection-container select {
   padding: 10px 5px;
-}
-
-@media all and (max-width: 900px) {
-  .data-selection-container {
-    flex-direction: column;
-    width: 600px;
-  }
-  .data-selection-container .data-selection-area {
-    flex-direction: row;
-  }
-  .data-selection-container .description-area {
-    flex-direction: column;
-  }
-  .data-selection-container .description-area h4 {
-    padding: 10px 5px;
-    padding-left: 0px;
-  }
-}
-
-@media all and (min-width: 901px) {
-  .data-selection-container {
-    flex-direction: column;
-    width: auto;
-  }
-  .data-selection-container .description-area {
-    flex-direction: column;
-  }
-  .data-selection-container .description-area p {
-    padding-top: 20px;
-  }
+  height: 45px;
 }
 
 #svg {
@@ -151,7 +122,7 @@ input[type="submit"] {
 
 .axis-x > g.tick > text:hover {
   cursor: pointer;
-  fill: #17416e;
+  fill: #e81717;
 }
 
 .chart-title {
@@ -172,4 +143,34 @@ input[type="submit"] {
 .gridline > g.tick > line {
   stroke: #ececed;
   border: 0px 0px;
+}
+
+.schema-gist {
+  width: 750px;
+  padding-top: 20px;
+}
+
+.schema-gist-toggle-bar {
+  font: 20px sans-serif;
+  border: 1px solid black;
+  padding: 5px 5px;
+}
+
+.schema-gist-toggle-bar:hover {
+  cursor: pointer;
+}
+
+.schema-gist-container {
+  /* Initially we don't want any height, and we want the contents to be hidden */
+  max-height: 0;
+  overflow: hidden;
+  /* Set our transitions up. */
+  -webkit-transition: max-height 600ms linear;
+  -moz-transition: max-height 600ms linear;
+  transition: max-height 600ms linear;
+}
+
+.schema-gist-container.open {
+  max-height: 875px;
+  margin-bottom: 20px;
 }

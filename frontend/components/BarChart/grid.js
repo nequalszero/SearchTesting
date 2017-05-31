@@ -25,7 +25,7 @@ class Grid extends React.Component {
 
   updateD3(props) {
     this.grid = this.axis.ticks(props.ticks)
-                         .tickSize(-props.axisLength, 0, 0)
+                         .tickSize(-props.tickLength, 0, 0)
                          .tickFormat("");
   }
 
@@ -60,7 +60,7 @@ class Grid extends React.Component {
 };
 
 Grid.propTypes = {
-  axisLength: PropTypes.number.isRequired,
+  tickLength: PropTypes.number.isRequired,
   translateX: PropTypes.number.isRequired,
   translateY: PropTypes.number.isRequired,
   axisType: PropTypes.string.isRequired,

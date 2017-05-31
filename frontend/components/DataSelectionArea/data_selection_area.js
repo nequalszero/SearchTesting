@@ -9,7 +9,7 @@ const DataSelectionArea = (props) => {
       <DataSelector currentKey={props.currentKey}
         dataKeys={props.dataKeys}
         handleSelection={(e) => props.handleSelection(e.target.value)}/>
-      <Description />
+      <Description description={props.description}/>
     </div>
   );
 }
@@ -17,7 +17,8 @@ const DataSelectionArea = (props) => {
 DataSelectionArea.propTypes = {
   dataKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleSelection: PropTypes.func.isRequired,
-  currentKey: PropTypes.string.isRequired
+  currentKey: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired
 };
 
 export default DataSelectionArea;

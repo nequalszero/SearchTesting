@@ -49,13 +49,13 @@ class BarChart extends React.Component {
   };
 
   horizontalGridProps = {
-    axisLength: this.xAxisProps.axisLength,
+    tickLength: this.xAxisProps.axisLength + 1,  // + 1 to get rid of black pixel from left over from setting axis.tickSizeOuter(0);
     translateX: this.yAxisProps.translateX,
     translateY: this.yAxisProps.translateY,
     axisType: this.yAxisProps.axisType,
     values: this.props.dataHash.map((timeObj) => timeObj.real),
     className: "gridline",
-    ticks: 10,
+    ticks: 9,
   }
 
   chartAreaProps = {

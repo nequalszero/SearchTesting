@@ -10,6 +10,7 @@ class Axis extends React.Component {
 
     this.scale = this.selectScaleType(props.scaleType)
     this.axis = this.selectAxisType(props.axisType, this.scale);
+    this.axis.tickSizeOuter(0);
     this.updateD3(props);
   }
 
@@ -108,7 +109,7 @@ class Axis extends React.Component {
       })
     }
   }
-yScale
+
   render() {
     return (
       <g>

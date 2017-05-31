@@ -1,0 +1,30 @@
+.schema-gist {
+  width: 750px;
+  padding-top: 20px;
+
+  &-toggle-bar {
+    font: 20px sans-serif;
+    border: 1px solid black;
+    padding: 5px 5px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &-container {
+    /* Initially we don't want any height, and we want the contents to be hidden */
+  	max-height: 0;
+  	overflow: hidden;
+
+  	/* Set our transitions up. */
+  	-webkit-transition: max-height 600ms linear;
+  	-moz-transition: max-height 600ms linear;
+  	transition: max-height 600ms linear;
+
+    &.open {
+      max-height: 875px;
+      margin-bottom: 20px;
+    }
+  }
+}

@@ -1,9 +1,12 @@
 .data-selection-container {
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  border: 1px solid red;
+  width: $chart-area-width;
+  border: 1px solid black;
   box-sizing: border-box;
   padding: 20px;
+  height: 155px;
 
   .data-selection-area, .description-area {
     display: flex;
@@ -16,44 +19,16 @@
     }
   }
 
+  .data-selection-area {
+    flex-direction: row;
+  }
+
+  .description-area {
+    flex-direction: column;
+  }
+
   select {
     padding: 10px 5px;
-  }
-}
-
-// For when the page is less than 900px
-@media all and (max-width: 900px) {
-  .data-selection-container {
-    flex-direction: column;
-    width: $chart-area-width;
-
-    .data-selection-area {
-      flex-direction: row;
-    }
-
-    .description-area {
-      flex-direction: column;
-
-      h4 {
-        padding: 10px 5px;
-        padding-left: 0px;
-      }
-    }
-  }
-}
-
-// Fo when the page is greater than 900px
-@media all and (min-width: 901px) {
-  .data-selection-container {
-    flex-direction: column;
-    width: auto;
-
-    .description-area {
-      flex-direction: column;
-
-      p {
-        padding-top: 20px;
-      }
-    }
+    height: 45px;
   }
 }
