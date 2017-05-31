@@ -16,6 +16,7 @@ class App extends React.Component {
 
     ({dataKeys: this.dataKeys, dataMap: this.dataMap} = constructDataKeysAndDataMap(applicationData));
     this.queryKeys = applicationData.query_keys;
+    this.gistIds = applicationData.gist_ids;
 
     this.state = {
       currentKey: this.dataKeys[0],
@@ -38,6 +39,12 @@ class App extends React.Component {
   render() {
     const benchmarks = this.selectDataSet(this.state.currentKey).benchmarks;
     const description = this.selectDataSet(this.state.currentKey).details.description;
+    const chartProps = {
+      xAxisLength: 450,
+      yAxisLength: 300,
+      translateX: 100,
+      translateY: 70
+    };
 
     return (
       <div className="app-container">
@@ -48,10 +55,12 @@ class App extends React.Component {
             description={description}/>
           <BarChart dataHash={benchmarks}
             queryKeys={this.queryKeys}
-            currentKey={this.state.currentKey}/>
+            currentKey={this.state.currentKey}
+            {...chartProps}/>
         </div>
         <SchemaGist handleClick={this.toggleSchemaGist}
-          schemaGistOpen={this.state.schemaGistOpen}/>
+          schemaGistOpen={this.state.schemaGistOpen}
+          gistId={this.gistIds.schema}/>
       </div>
     );
   }

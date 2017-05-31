@@ -572,6 +572,19 @@ const applicationData = {
       "tag_names": 563,
       "tags": 27850
     }
+  },
+  "gist_ids": {
+    "schema": "54e8860375d924960529759b489a01e6",
+    "relation w/ 2 joins": "ba24b989fdee016150aa1b501ee41789",
+    "relation w/ 3 queries": "288c2d85d32fe4019260125cbbc6cf03",
+    "relation w/ 2 subq": "555993cb3c5aeea4dce363882ee78291",
+    "relation w/ 1 subq, 2 joins": "1b33127074128083f2915980ba9d1c73",
+    "jsonb w/ 1 subq": "3d1467dd9f75a9b4e8743817d74c7897",
+    "array w/ 1 subq": "d042a03640b56218f495372e7acb8b75",
+    "hstore w/ 1 subq": "5168c022ef667341f9af619848a2a763",
+    "jsonb w/ 2 queries": "a93dbd53e56e25f014c83948d8d528c0",
+    "hstore w/ 2 queries": "35c2a627eee1db68fa68735f51a54638",
+    "array w/ 2 queries": "6c6c451195c7a48e1460d011aea5912d"
   }
 };
 

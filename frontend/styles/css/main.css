@@ -58,7 +58,7 @@ input[type="submit"] {
 
 .chart-area {
   display: block;
-  min-height: 500px;
+  height: 550px;
   width: 600px;
   border: 1px solid black;
   font: 1em sans-serif;
@@ -96,8 +96,8 @@ input[type="submit"] {
 }
 
 .data-selection-container select {
-  padding: 10px 5px;
-  height: 45px;
+  padding: 5px 5px;
+  height: auto;
 }
 
 #svg {

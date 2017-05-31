@@ -162,6 +162,7 @@ class Product < ActiveRecord::Base
     product = Product.create_new_product(params)
   end
 
+  # Makes a single query that joins the products, tags, and tag_names tables.
   # Takes many strings as an argument or a splatted array, e.g.
   # => Product.select_products_by_tags("the", "north", "face")      or
   # => Product.select_products_by_tags(*["the", "north", "face"])   or
@@ -185,6 +186,10 @@ class Product < ActiveRecord::Base
     SQL
   end
 
+  # Makes three queries.
+  # => one query to the tag_name_ids table,
+  # => one query to the tags table, and
+  # => a final query to the products table.
   # Takes many strings as an argument or a splatted array, e.g.
   # => Product.select_products_by_tags("the", "north", "face")      or
   # => Product.select_products_by_tags(*["the", "north", "face"])   or

@@ -21,13 +21,14 @@ const SchemaGist = (props) => {
         {getBarText()}
       </div>
       <div className={getClassName()}>
-        <code data-gist-id="54e8860375d924960529759b489a01e6" data-gist-show-spinner="true"></code>
+        <code data-gist-id={props.gistId} data-gist-show-spinner="true"></code>
       </div>
     </div>
   );
 }
 
 SchemaGist.propTypes = {
+  gistId: PropTypes.string.isRequired,
   schemaGistOpen: PropTypes.bool.isRequired,
   handleClick: PropTypes.func.isRequired
 };
