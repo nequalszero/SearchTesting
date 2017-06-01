@@ -1,24 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
-class ChartArea extends React.Component {
-  // fill="#74d3eb" rx="3" ry="3"
-  chartForeGround() {
-    return this.props.data.map((dataObj, idx) => (
-      <rect key={idx} className="chart-bar"
-        x={this.props.xScale(dataObj.query_key)} y={this.props.yScale(dataObj.value) - this.props.height}
-        height={this.props.height-this.props.yScale(dataObj.value)}
-        width={this.props.xScale.bandwidth()}/>
+const ChartArea = (props) => {
+  const barClass = (queryKey) => {
+    // console.log(queryKey, props.selectedBar);
+    return classNames({
+      'chart-bar': true,
+      active: props.selectedBar === queryKey
+    });
+  }
+
+  const chartForeGround = () => {
+    return props.data.map((dataObj, idx) => (
+      <rect key={idx} className={ barClass(dataObj.query_key) }
+        x={props.xScale(dataObj.query_key)}
+        y={props.yScale(dataObj.value) - props.height}
+        height={props.height-props.yScale(dataObj.value)}
+        width={props.xScale.bandwidth()}
+        onClick={() => props.handleClick(dataObj.query_key)}/>
     ));
   }
 
-  render() {
-    return (
-      <g transform={`translate(${this.props.translateX}, ${this.props.translateY})`}>
-        {this.chartForeGround()}
-      </g>
-    )
-  }
+  return (
+    <g transform={`translate(${props.translateX}, ${props.translateY})`}>
+      {chartForeGround()}
+    </g>
+  );
 }
 
 ChartArea.propTypes = {
@@ -32,6 +40,8 @@ ChartArea.propTypes = {
   height: PropTypes.number.isRequired,
   xScale: PropTypes.func.isRequired,
   yScale: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
+  selectedBar: PropTypes.string
 };
 
 export default ChartArea;

@@ -23,9 +23,11 @@ class App extends React.Component {
       currentKey: this.dataKeys[0],
       schemaGistOpen: false,
       sidebar: {
-        activePanel: 'benchmark',
+        activePanel: 'gist',
         queryGistId: null,
-        benchmark: null
+        benchmark: null,
+        queryKey: null,
+        transitioning: false
       }
     };
   }
@@ -43,9 +45,39 @@ class App extends React.Component {
   }
 
   selectSidebarPanel = (field) => {
-    const sidebar = this.state.sidebar;
+    const sidebar = Object.assign({}, this.state.sidebar);
     sidebar.activePanel = field;
     this.setState({sidebar});
+  }
+
+  refreshQueryGist() {
+    if (this.state.sidebar.queryGistId) {
+      console.log('refreshing query gist');
+      const sidebar = Object.assign({}, this.state.sidebar, {benchmark: null, queryGistId: null, transitioning: true});
+      this.setState({sidebar});
+    }
+  }
+
+  handleBarClick = (queryKey) => {
+    let benchmark, queryGistId;
+
+    if (this.state.sidebar.queryKey === queryKey) {
+      queryKey = null;
+      benchmark = null;
+      queryGistId = null;
+    } else {
+      this.refreshQueryGist();
+      benchmark = this.selectDataSet(this.state.currentKey)
+                      .benchmarks
+                      .find((bmObj) => bmObj.query_key === queryKey);
+      queryKey = benchmark.query_key;
+      queryGistId = this.gistIds[queryKey];
+    }
+
+
+    const sidebar = { queryKey, queryGistId, benchmark, activePanel: this.state.sidebar.activePanel, transitioning: false };
+
+    setTimeout(() => this.setState({sidebar}), 50);
   }
 
   render() {
@@ -54,7 +86,7 @@ class App extends React.Component {
     const chartProps = {
       xAxisLength: 450,
       yAxisLength: 300,
-      translateX: 80,
+      translateX: 100,
       translateY: 70
     };
 
@@ -66,9 +98,11 @@ class App extends React.Component {
             currentKey={this.state.currentKey}
             description={description}/>
           <div className="bar-chart-and-sidebar-container">
-            <BarChart dataHash={benchmarks}
+            <BarChart handleBarClick={(queryKey) => this.handleBarClick(queryKey)}
+              dataHash={benchmarks}
               queryKeys={this.queryKeys}
               currentKey={this.state.currentKey}
+              selectedBar={this.state.sidebar.queryKey}
               {...chartProps}/>
             <Sidebar {...this.state.sidebar}
               handlePanelSelect={(field) => this.selectSidebarPanel(field)}/>

@@ -65,7 +65,9 @@ class BarChart extends React.Component {
     translateY: this.props.translateY + this.props.yAxisLength,
     data: this.props.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.real})),
     width: this.props.xAxisLength,
-    height: this.props.yAxisLength
+    height: this.props.yAxisLength,
+    handleClick: (queryKey) => this.props.handleBarClick(queryKey),
+    selectedBar: this.props.selectedBar
   };
 
   componentDidMount() {
@@ -79,6 +81,7 @@ class BarChart extends React.Component {
     this.yAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.real);
     this.xAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.query_key).reverse();
     this.chartAreaProps.data = nextProps.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.real}));
+    this.chartAreaProps.selectedBar = nextProps.selectedBar;
     this.chartTitleProps.text = nextProps.currentKey;
   }
 
@@ -113,7 +116,9 @@ BarChart.propTypes = {
     user: PropTypes.number.isRequired,
     real: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired
-  })).isRequired
+  })).isRequired,
+  selectedBar: PropTypes.string,
+  handleBarClick: PropTypes.func.isRequired
 };
 
 export default BarChart;

@@ -56,11 +56,15 @@ input[type="submit"] {
   clear: both;
 }
 
+body {
+  font-family: 'Roboto Mono', monospace;
+}
+
 .data-selection-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 975px;
+  width: 1175px;
   border: 1px solid black;
   box-sizing: border-box;
   padding: 20px;
@@ -87,6 +91,7 @@ input[type="submit"] {
 }
 
 .data-selection-container select {
+  font-family: 'Roboto Mono', monospace;
   padding: 0px 5px;
   height: auto;
 }
@@ -94,28 +99,31 @@ input[type="submit"] {
 .bar-chart-and-sidebar-container {
   display: flex;
   flex-direction: row;
+  width: 1175px;
 }
 
 .bar-chart-area {
   display: block;
-  height: 550px;
+  height: 600px;
   width: 575px;
   border: 1px solid black;
-  font: 1em sans-serif;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: normal;
+  font-size: 1em;
   box-sizing: border-box;
 }
 
 .axis {
   font-size: 0.9em;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .axis-label {
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .axis-x > g.tick > text {
-  font-style: italic;
-  font-weight: bolder;
+  font-weight: normal;
 }
 
 .axis-x > g.tick > text:hover {
@@ -131,6 +139,10 @@ input[type="submit"] {
   fill: #74d3eb;
 }
 
+.chart-bar.active {
+  fill: #17416e;
+}
+
 .chart-bar:hover {
   cursor: pointer;
   fill: #17416e;
@@ -143,8 +155,8 @@ input[type="submit"] {
 
 .sidebar-container {
   box-sizing: border-box;
-  width: 400px;
-  height: 550px;
+  width: 600px;
+  height: 600px;
   border: 1px solid black;
 }
 
@@ -156,7 +168,7 @@ input[type="submit"] {
 }
 
 .sidebar-container .panels li {
-  font: 16px sans-serif;
+  font-size: 16px;
   width: 50%;
   padding-top: 15px;
   padding-bottom: 15px;
@@ -172,13 +184,26 @@ input[type="submit"] {
   border-right: 1px solid black;
 }
 
+.sidebar-container .query-gist {
+  width: 100%;
+  height: -webkit-calc( 100% - 50px );
+  height: -moz-calc( 100% - 50px );
+  height: calc( 100% - 50px );
+  overflow-y: auto;
+}
+
+.sidebar-container .query-gist code {
+  height: 100%;
+  width: 100%;
+}
+
 .schema-gist {
   width: 750px;
   padding-top: 20px;
 }
 
 .schema-gist-toggle-bar {
-  font: 20px sans-serif;
+  font-size: 20px;
   border: 1px solid black;
   padding: 5px 5px;
 }

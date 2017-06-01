@@ -21,7 +21,7 @@ const SchemaGist = (props) => {
         {getBarText()}
       </div>
       <div className={getClassName()}>
-        <code data-gist-id={props.gistId} data-gist-show-spinner="true"></code>
+        <code data-gist-id={props.gistId} data-gist-show-spinner="true" gist-enable-cache="true"></code>
       </div>
     </div>
   );

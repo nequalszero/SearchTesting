@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Takes a primary dataKey (string) and an optional details object.
 // The details object should have keys for queries and keywords, both of which
 //   should have number values.
@@ -37,4 +39,24 @@ export const constructDataKeysAndDataMap = (applicationData) => {
   })
 
   return {dataKeys, dataMap};
+}
+
+// Not currently being used. This method takes the gist_ids object from applicationData
+//  and returns an array of gist-embed code elements for each of the queries.
+//  (Ignores the schema key in the gist_ids object).
+export const constructQueryGistElements = (gist_ids) => {
+  const queryGists = [];
+
+  Object.keys(gist_ids).forEach((queryKey) => {
+    if (queryKey !== 'schema') {
+      queryGists.push(
+        <code data-gist-id={gist_ids[queryKey]}
+          data-gist-show-spinner="true"
+          data-gist-hide-footer="true">
+        </code>
+      );
+    }
+  })
+
+  return queryGists;
 }

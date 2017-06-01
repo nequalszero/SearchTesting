@@ -3,20 +3,23 @@
   height: $data-area-height;
   width: $bar-chart-area-width;
   border: 1px solid black;
-  font: 1em sans-serif;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: normal;
+  font-size: 1em;
   box-sizing: border-box;
 }
 
 .axis {
   font-size: 0.9em;
+  font-family: 'Roboto Mono', monospace;
 
   &-label {
-    font-weight: bold;
+    font-weight: normal;
   }
 
   &-x > g.tick > text {
-    font-style: italic;
-    font-weight: bolder;
+    // font-style: italic;
+    font-weight: normal;
 
     &:hover {
       cursor: pointer;
@@ -31,6 +34,10 @@
 
 .chart-bar {
   fill: #74d3eb;
+
+  &.active {
+    fill: #17416e;
+  }
 
   &:hover {
     cursor: pointer;
