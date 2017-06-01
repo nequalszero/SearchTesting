@@ -7,8 +7,7 @@ const QueryGist = (props) => {
     <div className={`query-gist ${props.queryGistId}`}>
       <code data-gist-id={props.queryGistId}
         data-gist-show-spinner="true"
-        data-gist-hide-footer="true"
-        gist-enable-cache="true">
+        data-gist-hide-footer="true">
       </code>
     </div>
   )
