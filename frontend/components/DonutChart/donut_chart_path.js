@@ -6,6 +6,9 @@ class DonutChartPath extends React.Component {
   constructor(props) {
     super(props);
     this.updateD3(props);
+
+    // State being used to update the label text element transforms
+    //   accounting for element sizes after the initial rendering.
     this.state = { newLabelNodes: true };
   }
 
@@ -23,8 +26,8 @@ class DonutChartPath extends React.Component {
   }
 
   updateD3(props) {
+    // Used to store node references to the text labels.
     this.labelNodes = {};
-
     this.radius = props.height;
     this.outerRadius = this.radius/2;
     this.innerRadius = this.radius/props.innerRadiusRatio;
@@ -37,34 +40,8 @@ class DonutChartPath extends React.Component {
     this.createPaths(props);
   }
 
-  // expects a transform string with translateX and translateY values.
-  parseTransform(transformValue) {
-    const openParenIdx = transformValue.indexOf('(');
-    const commaIdx = transformValue.indexOf(',');
-    const closeParenIdx = transformValue.length - 1;
-
-    return {
-      translateX: parseFloat(transformValue.slice(openParenIdx + 1, commaIdx)),
-      translateY: parseFloat(transformValue.slice(commaIdx + 1, closeParenIdx))
-    };
-  }
-
-  updateLabels() {
-    if (this.props.labels) {
-      this.gNode.childNodes.forEach((nestedGNode) => {
-        nestedGNode.childNodes.forEach((node) => {
-          if (node.tagName === "text") {
-            let {height, width} = node.getBBox();
-            let {translateX, translateY} = this.parseTransform(node.getAttribute('transform'));
-            node.setAttribute('transform', `translate(${translateX - width/2}, ${translateY - height/2})`)
-          }
-        })
-      })
-
-      d3.select(this.gNode).call(this.arc);
-    }
-  }
-
+  // Creates label transform(translate()) string, using the center of each arc
+  //   wedge and the height/width of the label text element when available.
   labelTransform(data, labelKey) {
     if (this.labelNodes[labelKey]) {
       const { width, height } = this.labelNodes[labelKey].getBBox();
@@ -76,11 +53,17 @@ class DonutChartPath extends React.Component {
     }
   }
 
+  // Not bothering to store labels in an instance variable since the label
+  //   transforms are being updated after rendering, and the createLabels()
+  //   method is being called in the render method.
   createLabels() {
     return this.props.pie(this.props.data).map((data, idx) => {
+      // Don't label the really small wedges.
       if (data.endAngle - data.startAngle < 0.1) return null;
       let labelKey = data.data[this.props.labelKey]
 
+      // Note the ref being placed on each label element for easy reference
+      //   and subsequently easy access to the height/width for repositioning.
       return (
         <text transform={this.labelTransform(data, labelKey)}
           ref={ (node) => this.labelNodes[labelKey] = node }
@@ -97,14 +80,15 @@ class DonutChartPath extends React.Component {
     //  endAngle, startAngle, index, padAngle, and
     //  value (probably duplicate of value inside data attribute)
     this.paths = props.pie(props.data).map((data, idx) => (
-      <g key={idx} className="arc">
-        <path fill={props.color(idx)}
-          d={this.arc(data)}>
-        </path>
-      </g>
+      <path key={idx} className="arc" fill={props.color(idx)}
+        d={this.arc(data)}>
+      </path>
     ));
   }
 
+  // Intentionally not rendering each text label element as an adjacent sibling
+  //  to its corresponding arc wedge to ensure that all text elements are visible
+  //  (in front of the wedges).  CSS z-index does not work on SVG.
   render() {
     return (
       <g ref={(gNode) => this.gNode = gNode} transform={this.transform}>
@@ -116,15 +100,15 @@ class DonutChartPath extends React.Component {
 }
 
 DonutChartPath.propTypes = {
-  width: PropTypes.number,
-  height: PropTypes.number,
-  data: PropTypes.array,
-  pie: PropTypes.func,
   color: PropTypes.func,
-  innerRadiusRatio: PropTypes.number,
-  labels: PropTypes.bool,
+  data: PropTypes.array,
   formatLabel: PropTypes.func,
-  labelKey: PropTypes.string
+  height: PropTypes.number,
+  innerRadiusRatio: PropTypes.number,
+  labelKey: PropTypes.string,
+  labels: PropTypes.bool,
+  pie: PropTypes.func,
+  width: PropTypes.number,
 }
 
 DonutChartPath.defaultProps = {
