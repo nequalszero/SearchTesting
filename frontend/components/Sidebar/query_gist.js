@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const QueryGist = (props) => {
-  console.log(`rendering gist with id: ${props.queryGistId}`);
   return (
     <div className={`query-gist ${props.queryGistId}`}>
       <code data-gist-id={props.queryGistId}

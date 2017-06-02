@@ -7,6 +7,7 @@ import { createAxisLabelTransform } from '../../lib/axis_helper';
 class Axis extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {mounted: false}
 
     this.scale = this.selectScaleType(props.scaleType)
     this.axis = this.selectAxisType(props.axisType, this.scale);
@@ -17,7 +18,7 @@ class Axis extends React.Component {
   componentDidMount() {
     this.renderAxis();
     this.props.axisRef(this.scale);
-    this.forceUpdate();
+    this.setState({mounted: true})
   }
 
   componentWillReceiveProps(newProps) {

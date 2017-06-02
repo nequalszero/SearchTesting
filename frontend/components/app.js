@@ -33,6 +33,14 @@ class App extends React.Component {
   }
 
   changeDataSet = (dataKey) => {
+    const queryKey = this.state.sidebar.queryKey;
+
+    if (queryKey) {
+      const benchmark = this.selectSidebarBenchmark(dataKey, queryKey);
+      const sidebar = Object.assign({}, this.state.sidebar, {benchmark});
+      this.setState({sidebar});
+    }
+
     this.setState({currentKey: dataKey});
   }
 
@@ -52,10 +60,15 @@ class App extends React.Component {
 
   refreshQueryGist() {
     if (this.state.sidebar.queryGistId) {
-      console.log('refreshing query gist');
       const sidebar = Object.assign({}, this.state.sidebar, {benchmark: null, queryGistId: null, transitioning: true});
       this.setState({sidebar});
     }
+  }
+
+  selectSidebarBenchmark(dataKey, queryKey) {
+    return this.selectDataSet(dataKey)
+               .benchmarks
+               .find((bmObj) => bmObj.query_key === queryKey);
   }
 
   handleBarClick = (queryKey) => {
@@ -67,9 +80,7 @@ class App extends React.Component {
       queryGistId = null;
     } else {
       this.refreshQueryGist();
-      benchmark = this.selectDataSet(this.state.currentKey)
-                      .benchmarks
-                      .find((bmObj) => bmObj.query_key === queryKey);
+      benchmark = this.selectSidebarBenchmark(this.state.currentKey, queryKey);
       queryKey = benchmark.query_key;
       queryGistId = this.gistIds[queryKey];
     }

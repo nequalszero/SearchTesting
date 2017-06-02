@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import DonutChart from '../DonutChart';
 import QueryGist from './query_gist';
+import { round } from '../../lib/miscellaneous_functions';
 
 class Sidebar extends React.Component {
   // Necessary to make the embedded gists show up after rendering.
@@ -23,12 +24,17 @@ class Sidebar extends React.Component {
 
     return (
       <DonutChart color={['#41B787', '#6352B9', '#B65480', '#D5735A']}
-        id="pie-chart-container"
+        id="donut-chart-container"
         width={300}
         height={300}
         data={donutDataObjects}
-        point='value'
-        enable3d={false}/>
+        valueKey='value'
+        labels={true}
+        labelKey='key'
+        enable3D={true}
+        translateX={30}
+        translateY={30}
+        formatLabel={(time) => `${round(time, 2)}s`}/>
     );
   }
 
@@ -41,7 +47,7 @@ class Sidebar extends React.Component {
         </nav>
         { (this.props.activePanel === "benchmark") && this.props.benchmark && this.buildDonutChart() }
         { (this.props.activePanel === "gist") && this.props.queryGistId && <QueryGist queryGistId={this.props.queryGistId} /> }
-        { !this.props.benchmark && !this.props.transitioning && <p>Click a bar on the chart to view additional benchmark and query information</p>}
+        { !this.props.benchmark && !this.props.transitioning && <p>Click a bar on the chart to view additional benchmark and query information.</p>}
       </div>
     );
   }

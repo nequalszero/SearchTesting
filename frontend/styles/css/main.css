@@ -197,6 +197,11 @@ body {
   width: 100%;
 }
 
+.donut-chart-container {
+  width: 600px;
+  height: 400px;
+}
+
 .schema-gist {
   width: 750px;
   padding-top: 20px;
