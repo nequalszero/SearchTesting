@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 import DonutChartShadow from './donut_chart_shadow';
 import DonutChartPath from './donut_chart_path';
+import CenterText from './center_text';
 
 class DonutChart extends React.Component {
   constructor(props) {
@@ -15,40 +16,54 @@ class DonutChart extends React.Component {
 
     this.color = d3.scaleOrdinal()
                    .range(this.props.color);
+  }
 
-    this.state = {width: this.props.width};
+  constructShadow() {
+    return (
+      <DonutChartShadow width={this.props.width}
+        height={this.props.height}
+        innerRadiusRatio={this.props.innerRadiusRatio}
+        pie={this.pie}
+        color={this.color}
+        data={this.props.data}
+        shadowSize={this.props.shadowSize}/>
+    );
+  }
+
+  constructCenterText() {
+    const value = this.props.data.reduce((a, b) => ({
+      [this.props.valueKey]: a[this.props.valueKey] + b[this.props.valueKey]
+    }));
+    const text = this.props.formatLabel(value[this.props.valueKey]);
+
+    return (
+      <CenterText text={text}
+        translateX={this.props.height/2}
+        translateY={this.props.height/2}/>
+    )
   }
 
   render() {
-    let shadow, legend;
-
-    if (this.props.enable3D) {
-      shadow = (
-        <DonutChartShadow width={this.state.width}
-          height={this.props.height}
-          innerRadiusRatio={this.props.innerRadiusRatio}
-          pie={this.pie}
-          color={this.color}
-          data={this.props.data}
-          shadowSize={this.props.shadowSize}/>
-      );
-    }
-
+    let legend;
 
     return (
       <div>
-        <svg className={this.props.id}>
+        <svg className={this.props.className}>
           <g transform={`translate(${this.props.translateX}, ${this.props.translateY})`}>
-            {shadow}
-            <DonutChartPath width={this.state.width}
+
+            {this.props.enabled3D && this.constructShadow()}
+
+            <DonutChartPath color={this.color}
+              data={this.props.data}
+              formatLabel={this.props.formatLabel}
               height={this.props.height}
               innerRadiusRatio={this.props.innerRadiusRatio}
-              pie={this.pie}
-              color={this.color}
-              data={this.props.data}
+              labelKey={this.props.labelKey}
               labels={this.props.labels}
-              formatLabel={this.props.formatLabel}
-              labelKey={this.props.labelKey}/>
+              pie={this.pie}
+              width={this.props.width}/>
+
+            { this.props.displaySumInCenter && this.constructCenterText() }
 
             {legend}
           </g>
@@ -60,12 +75,13 @@ class DonutChart extends React.Component {
 
 
 DonutChart.propTypes = {
-  color: PropTypes.array,
+  className: PropTypes.string.isRequired,
+  color: PropTypes.arrayOf(PropTypes.string).isRequired,
   data: PropTypes.array.isRequired,
+  displaySumInCenter: PropTypes.bool.isRequired,
   enable3D: PropTypes.bool,
   formatLabel: PropTypes.func,
   height: PropTypes.number,
-  id: PropTypes.string.isRequired,
   innerRadiusRatio: PropTypes.number,
   labelKey: PropTypes.string,
   labels: PropTypes.bool,
@@ -75,12 +91,12 @@ DonutChart.propTypes = {
 };
 
 DonutChart.defaultProps = {
-  color:[],
+  enabled3D: true,
   formatLabel: (label) => (label),
   height: 250,
-  innerRadiusRatio:3.3,
-  labels: false,
-  padAngle:0,
+  innerRadiusRatio: 3.3,
+  labels: true,
+  padAngle: 0,
   width: 500,
 };
 

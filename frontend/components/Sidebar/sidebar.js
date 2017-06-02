@@ -23,18 +23,19 @@ class Sidebar extends React.Component {
     })
 
     return (
-      <DonutChart color={['#41B787', '#6352B9', '#B65480', '#D5735A']}
-        id="donut-chart-container"
-        width={300}
-        height={300}
+      <DonutChart className="donut-chart-container"
+        color={['#41B787', '#6352B9', '#B65480', '#D5735A']}
         data={donutDataObjects}
-        valueKey='value'
-        labels={true}
-        labelKey='key'
+        displaySumInCenter={true}
         enable3D={true}
+        formatLabel={(time) => `${round(time, 2)}s`}
+        height={300}
+        labelKey='key'
+        labels={true}
         translateX={30}
         translateY={30}
-        formatLabel={(time) => `${round(time, 2)}s`}/>
+        valueKey='value'
+        width={300}/>
     );
   }
 

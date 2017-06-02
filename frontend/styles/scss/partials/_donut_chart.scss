@@ -1,4 +1,8 @@
 .donut-chart-container {
   width: $sidebar-area-width;
   height: 400px;
+
+  .donut-chart-center-text {
+    font-size: 20px;
+  }
 }

@@ -16,27 +16,26 @@ class DonutChartPath extends React.Component {
     if (this.state.newLabelNodes) this.setState({newLabelNodes: false});
   }
 
-  componentDidUpdate() {
-    if (this.state.newLabelNodes) this.setState({newLabelNodes: false});
-  }
-
   componentWillReceiveProps(nextProps) {
     this.updateD3(nextProps);
     this.setState({newLabelNodes: true})
   }
 
+  componentDidUpdate() {
+    if (this.state.newLabelNodes) this.setState({newLabelNodes: false});
+  }
+
   updateD3(props) {
     // Used to store node references to the text labels.
     this.labelNodes = {};
-    this.radius = props.height;
-    this.outerRadius = this.radius/2;
-    this.innerRadius = this.radius/props.innerRadiusRatio;
+    this.outerRadius = props.height/2;
+    this.innerRadius = props.height/props.innerRadiusRatio;
 
     this.arc = d3.arc()
                  .outerRadius(this.outerRadius)
                  .innerRadius(this.innerRadius);
 
-    this.transform = `translate(${this.radius/2}, ${this.radius/2})`;
+    this.transform = `translate(${props.height/2}, ${props.height/2})`;
     this.createPaths(props);
   }
 
