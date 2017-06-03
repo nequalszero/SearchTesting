@@ -21,8 +21,15 @@
     // font-style: italic;
     font-weight: normal;
 
+    &.active {
+      fill: #e81717;
+    }
+
     &:hover {
       cursor: pointer;
+    }
+
+    &.hovering-over {
       fill: #e81717;
     }
   }
@@ -41,6 +48,9 @@
 
   &:hover {
     cursor: pointer;
+  }
+
+  &.hovering-over {
     fill: #17416e;
   }
 }

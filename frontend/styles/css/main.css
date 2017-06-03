@@ -126,8 +126,15 @@ body {
   font-weight: normal;
 }
 
+.axis-x > g.tick > text.active {
+  fill: #e81717;
+}
+
 .axis-x > g.tick > text:hover {
   cursor: pointer;
+}
+
+.axis-x > g.tick > text.hovering-over {
   fill: #e81717;
 }
 
@@ -145,6 +152,9 @@ body {
 
 .chart-bar:hover {
   cursor: pointer;
+}
+
+.chart-bar.hovering-over {
   fill: #17416e;
 }
 

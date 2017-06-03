@@ -3,24 +3,26 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const ChartArea = (props) => {
-  const barClass = (queryKey) => {
-    // console.log(queryKey, props.selectedBar);
-    return classNames({
+  const barClass = (key) => (
+    classNames({
       'chart-bar': true,
-      active: props.selectedBar === queryKey
-    });
-  }
+      active: props.selectedKey === key,
+      'hovering-over': props.hoverKey === key
+    })
+  );
 
   const chartForeGround = () => {
     return props.data.map((dataObj, idx) => (
-      <rect key={idx} className={ barClass(dataObj.query_key) }
-        x={props.xScale(dataObj.query_key)}
+      <rect key={idx} className={ barClass(dataObj.key) }
+        x={props.xScale(dataObj.key)}
         y={props.yScale(dataObj.value) - props.height}
         height={props.height-props.yScale(dataObj.value)}
         width={props.xScale.bandwidth()}
-        onClick={() => props.handleClick(dataObj.query_key)}/>
+        onClick={() => props.handleClick(dataObj.key)}
+        onMouseEnter={() => props.handleMouseOver(dataObj.key)}
+        onMouseLeave={() => props.handleMouseOut()}/>
     ));
-  }
+  };
 
   return (
     <g transform={`translate(${props.translateX}, ${props.translateY})`}>
@@ -30,18 +32,19 @@ const ChartArea = (props) => {
 }
 
 ChartArea.propTypes = {
-  translateX: PropTypes.number.isRequired,
-  translateY: PropTypes.number.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape({
-    query_key: PropTypes.string.isRequired,
+    key: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired
   })).isRequired,
-  width: PropTypes.number.isRequired,
+  handleClick: PropTypes.func,
   height: PropTypes.number.isRequired,
+  hoverKey: PropTypes.string,
+  selectedKey: PropTypes.string,
+  translateX: PropTypes.number.isRequired,
+  translateY: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
   xScale: PropTypes.func.isRequired,
   yScale: PropTypes.func.isRequired,
-  handleClick: PropTypes.func.isRequired,
-  selectedBar: PropTypes.string
 };
 
 export default ChartArea;

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import classNames from'classnames';
+
 import { createAxisLabelTransform } from '../../lib/axis_helper';
 
 // Have not yet tested this component for right and top axes.
@@ -31,6 +33,13 @@ class Axis extends React.Component {
 
   calculateAxisLabelTransform() {
     return createAxisLabelTransform(this.textNode, this.axisNode, this.props);
+  }
+
+  getTickClass(tickName) {
+    return classNames({
+      active: this.props.selectedKey == tickName,
+      'hovering-over': this.props.hoverKey == tickName
+    });
   }
 
   selectScaleType(type) {
@@ -89,25 +98,32 @@ class Axis extends React.Component {
     const tickRotation = this.props.tickTransformation ? (this.props.tickTransformation.tickRotation || 0) : 0;
 
     const axis = d3.select(this.axisNode).call(this.axis)
+    const axisTicks = axis.selectAll('text');
 
+    // Apply rotation to tick labels if needed.
     if (tickRotation !== 0) {
       const dx = this.props.tickTransformation.dx || "-0.8em";
       const dy = this.props.tickTransformation.dy || "0.15em";
 
-      axis.selectAll('text')
-        .style('text-anchor', 'end')
-        .attr("dx", dx)
-        .attr("dy", dy)
-        .attr("transform", `rotate(${tickRotation})`);
+      axisTicks.style('text-anchor', 'end')
+               .attr("dx", dx)
+               .attr("dy", dy)
+               .attr("transform", `rotate(${tickRotation})`)
     }
 
-    if (this.props.onTickClick) {
-      this.axisNode.childNodes.forEach((node) => {
-        if (node.tagName === "g") {
-          node.removeEventListener('click', this.handleTickClick);
-          node.addEventListener('click', this.handleTickClick);
-        }
-      })
+    // Apply an active class to the tick if it matches the selectedKey prop.
+    axisTicks.attr("class", (tickName) => this.getTickClass(tickName));
+
+    if (this.props.handleTickClick) {
+      axisTicks.on('click', (tickName) => this.props.handleTickClick(tickName) );
+    }
+
+    if (this.props.handleTickMouseOver) {
+      axisTicks.on('mouseover', (tickName) => this.props.handleTickMouseOver(tickName));
+    }
+
+    if (this.props.handleTickMouseOut) {
+      axisTicks.on('mouseout', () => this.props.handleTickMouseOut());
     }
   }
 
@@ -129,20 +145,7 @@ class Axis extends React.Component {
 }
 
 Axis.propTypes = {
-  axisType: PropTypes.string.isRequired,
-  scaleType: PropTypes.string.isRequired,
   axisLength: PropTypes.number.isRequired,
-  values: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.arrayOf(PropTypes.number),
-  ]),
-  translateX: PropTypes.number.isRequired,
-  translateY: PropTypes.number.isRequired,
-  tickTransformation: PropTypes.shape({
-    rotation: PropTypes.number,
-    dx: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    dy: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  }),
   axisLabelProps: PropTypes.shape({
     rotation: PropTypes.number,
     text: PropTypes.string,
@@ -151,8 +154,26 @@ Axis.propTypes = {
     translateY: PropTypes.number
   }),
   axisRef: PropTypes.func.isRequired,
+  axisType: PropTypes.string.isRequired,
   barPadding: PropTypes.number,
-  onTickClick: PropTypes.func
+  handleTickClick: PropTypes.func,
+  handleTickMouseOver: PropTypes.func,
+  handleTickMouseOut: PropTypes.func,
+  hoverKey: PropTypes.string,
+  onTickClick: PropTypes.func,
+  scaleType: PropTypes.string.isRequired,
+  selectedKey: PropTypes.string,
+  tickTransformation: PropTypes.shape({
+    rotation: PropTypes.number,
+    dx: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    dy: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  }),
+  translateX: PropTypes.number.isRequired,
+  translateY: PropTypes.number.isRequired,
+  values: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.arrayOf(PropTypes.number),
+  ]),
 };
 
 export default Axis;

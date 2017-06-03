@@ -33,21 +33,26 @@ class BarChart extends React.Component {
   };
 
   xAxisProps = {
-    axisLength: this.props.xAxisLength,
-    scaleType: "band",
-    translateX: this.props.translateX,
-    translateY: this.props.translateY + this.props.yAxisLength,
-    values: this.props.dataHash.map((timeObj) => timeObj.query_key).reverse(),
-    axisType: "bottom",
-    tickTransformation: {
-      tickRotation: -45
-    },
     axisLabelProps: {
       text: "Query",
       translateY: 20
     },
+    axisLength: this.props.xAxisLength,
+    axisType: "bottom",
     barPadding: 0.25,
-    className: "axis axis-x"
+    className: "axis axis-x",
+    handleTickClick: (queryKey) => this.props.handlers.handleXTickClick(queryKey),
+    handleTickMouseOver: (queryKey) => this.props.handlers.handleXTickMouseOver(queryKey),
+    handleTickMouseOut: () => this.props.handlers.handleXTickMouseOut(),
+    hoverKey: this.props.hoverKey,
+    scaleType: "band",
+    selectedKey: this.props.selectedKey,
+    tickTransformation: {
+      tickRotation: -45
+    },
+    translateY: this.props.translateY + this.props.yAxisLength,
+    translateX: this.props.translateX,
+    values: this.props.dataHash.map((timeObj) => timeObj.query_key).reverse(),
   };
 
   horizontalGridProps = {
@@ -63,11 +68,14 @@ class BarChart extends React.Component {
   chartAreaProps = {
     translateX: this.props.translateX,
     translateY: this.props.translateY + this.props.yAxisLength,
-    data: this.props.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.real})),
+    data: this.props.dataHash.map((timeObj) => ({key: timeObj.query_key, value: timeObj.real})),
     width: this.props.xAxisLength,
     height: this.props.yAxisLength,
-    handleClick: (queryKey) => this.props.handleBarClick(queryKey),
-    selectedBar: this.props.selectedBar
+    handleClick: (queryKey) => this.props.handlers.handleBarClick(queryKey),
+    handleMouseOver: (queryKey) => this.props.handlers.handleBarMouseOver(queryKey),
+    handleMouseOut: () => this.props.handlers.handleBarMouseOut(),
+    hoverKey: this.props.hoverKey,
+    selectedKey: this.props.selectedKey,
   };
 
   componentDidMount() {
@@ -80,8 +88,11 @@ class BarChart extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.yAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.real);
     this.xAxisProps.values = nextProps.dataHash.map((timeObj) => timeObj.query_key).reverse();
-    this.chartAreaProps.data = nextProps.dataHash.map((timeObj) => ({query_key: timeObj.query_key, value: timeObj.real}));
-    this.chartAreaProps.selectedBar = nextProps.selectedBar;
+    this.chartAreaProps.data = nextProps.dataHash.map((timeObj) => ({key: timeObj.query_key, value: timeObj.real}));
+    this.chartAreaProps.selectedKey = nextProps.selectedKey;
+    this.chartAreaProps.hoverKey = nextProps.hoverKey;
+    this.xAxisProps.selectedKey = nextProps.selectedKey;
+    this.xAxisProps.hoverKey = nextProps.hoverKey;
     this.chartTitleProps.text = nextProps.currentKey;
   }
 
@@ -93,7 +104,6 @@ class BarChart extends React.Component {
           <Axis {...this.yAxisProps}
             axisRef={(scale) => {this.yScale = scale}}/>
           <Axis {...this.xAxisProps}
-            onTickClick={() => {console.log("clicked tick")}}
             axisRef={(scale) => {this.xScale = scale}}/>
           {this.state.axesMounted && <Grid {...this.horizontalGridProps}/>}
           {this.state.axesMounted && <ChartArea {...this.chartAreaProps}/>}
@@ -104,11 +114,6 @@ class BarChart extends React.Component {
 }
 
 BarChart.propTypes = {
-  xAxisLength: PropTypes.number.isRequired,
-  yAxisLength: PropTypes.number.isRequired,
-  translateX: PropTypes.number.isRequired,
-  translateY: PropTypes.number.isRequired,
-  queryKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   currentKey: PropTypes.string.isRequired,
   dataHash: PropTypes.arrayOf(PropTypes.shape({
     query_key: PropTypes.string.isRequired,
@@ -117,8 +122,24 @@ BarChart.propTypes = {
     real: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired
   })).isRequired,
-  selectedBar: PropTypes.string,
-  handleBarClick: PropTypes.func.isRequired
+  handlers: PropTypes.shape({
+    handleBarClick: PropTypes.func,
+    handleBarMouseOver: PropTypes.func,
+    handleBarMouseOut: PropTypes.func,
+    handleXTickClick: PropTypes.func,
+    handleXTickMouseOver: PropTypes.func,
+    handleXTickMouseOut: PropTypes.func,
+    handleYTickClick: PropTypes.func,
+    handleYTickMouseOver: PropTypes.func,
+    handleYTickMouseOut: PropTypes.func,
+  }).isRequired,
+  hoverKey: PropTypes.string,
+  queryKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedKey: PropTypes.string,
+  translateX: PropTypes.number.isRequired,
+  translateY: PropTypes.number.isRequired,
+  xAxisLength: PropTypes.number.isRequired,
+  yAxisLength: PropTypes.number.isRequired,
 };
 
 export default BarChart;

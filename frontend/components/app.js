@@ -22,6 +22,9 @@ class App extends React.Component {
     this.state = {
       currentKey: this.dataKeys[0],
       schemaGistOpen: false,
+      barChart: {
+        hoverKey: null
+      },
       sidebar: {
         activePanel: 'benchmark',
         queryGistId: null,
@@ -71,7 +74,7 @@ class App extends React.Component {
                .find((bmObj) => bmObj.query_key === queryKey);
   }
 
-  handleBarClick = (queryKey) => {
+  handleBarChartClick = (queryKey) => {
     let benchmark, queryGistId;
 
     if (this.state.sidebar.queryKey === queryKey) {
@@ -91,14 +94,35 @@ class App extends React.Component {
     setTimeout(() => this.setState({sidebar}), 50);
   }
 
+  handleBarChartMouseOver = (queryKey) => {
+    this.setState({ barChart: { hoverKey: queryKey } });
+  }
+
+  handleBarChartMouseOut = () => {
+    this.setState({ barChart: {hoverKey: null} });
+  }
+
   render() {
     const benchmarks = this.selectDataSet(this.state.currentKey).benchmarks;
     const description = this.selectDataSet(this.state.currentKey).details.description;
     const chartProps = {
+      currentKey: this.state.currentKey,
+      dataHash: benchmarks,
+      handlers: {
+        handleBarClick: (queryKey) => this.handleBarChartClick(queryKey),
+        handleBarMouseOver: (queryKey) => this.handleBarChartMouseOver(queryKey),
+        handleBarMouseOut: () => this.handleBarChartMouseOut(),
+        handleXTickClick: (queryKey) => this.handleBarChartClick(queryKey),
+        handleXTickMouseOver: (queryKey) => this.handleBarChartMouseOver(queryKey),
+        handleXTickMouseOut: () => this.handleBarChartMouseOut(),
+      },
+      hoverKey: this.state.barChart.hoverKey,
+      queryKeys: this.queryKeys,
+      selectedKey: this.state.sidebar.queryKey,
+      translateX: 100,
+      translateY: 70,
       xAxisLength: 450,
       yAxisLength: 300,
-      translateX: 100,
-      translateY: 70
     };
 
     return (
@@ -109,12 +133,7 @@ class App extends React.Component {
             currentKey={this.state.currentKey}
             description={description}/>
           <div className="bar-chart-and-sidebar-container">
-            <BarChart handleBarClick={(queryKey) => this.handleBarClick(queryKey)}
-              dataHash={benchmarks}
-              queryKeys={this.queryKeys}
-              currentKey={this.state.currentKey}
-              selectedBar={this.state.sidebar.queryKey}
-              {...chartProps}/>
+            <BarChart {...chartProps}/>
             <Sidebar {...this.state.sidebar}
               handlePanelSelect={(field) => this.selectSidebarPanel(field)}/>
           </div>

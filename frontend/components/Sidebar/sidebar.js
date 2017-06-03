@@ -9,7 +9,7 @@ import { round } from '../../lib/miscellaneous_functions';
 class Sidebar extends React.Component {
   // Necessary to make the embedded gists show up after rendering.
   componentDidUpdate() {
-    $('[data-gist-id]').gist();
+    
   }
 
   buildDonutChart() {
