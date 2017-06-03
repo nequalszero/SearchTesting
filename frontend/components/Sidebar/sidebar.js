@@ -7,9 +7,24 @@ import QueryGist from './query_gist';
 import { round } from '../../lib/miscellaneous_functions';
 
 class Sidebar extends React.Component {
-  // Necessary to make the embedded gists show up after rendering.
-  componentDidUpdate() {
-    
+  getPanelClass(panel) {
+    return classNames({
+      left: panel === 'benchmark',
+      active: panel === this.props.activePanel,
+      inactive: panel !== this.props.activePanel,
+    })
+  }
+
+  // Message rendered if no data is selected on the bar chart.
+  renderNoSelectionMessage() {
+    switch(this.props.activePanel) {
+      case 'benchmark':
+        return <p className="no-selection">Click a bar on the chart to view a breakdown of the benchmark time.</p>;
+      case 'gist':
+        return <p className="no-selection">Click a bar on the chart to view the query details.</p>;
+      default:
+        throw `Error in Sidebar#renderNoSelectionMessage: unaccounted case '${this.props.activePanel}'`;
+    }
   }
 
   buildDonutChart() {
@@ -43,12 +58,12 @@ class Sidebar extends React.Component {
     return (
       <div className="sidebar-container">
         <nav className="panels">
-          <li className="left" onClick={() => this.props.handlePanelSelect('benchmark')}>Benchmark</li>
-          <li className="right" onClick={() => this.props.handlePanelSelect('gist')}>View Query</li>
+          <li className={this.getPanelClass('benchmark')} onClick={() => this.props.handlePanelSelect('benchmark')}>Benchmark</li>
+          <li className={this.getPanelClass('gist')} onClick={() => this.props.handlePanelSelect('gist')}>View Query</li>
         </nav>
         { (this.props.activePanel === "benchmark") && this.props.benchmark && this.buildDonutChart() }
         { (this.props.activePanel === "gist") && this.props.queryGistId && <QueryGist queryGistId={this.props.queryGistId} /> }
-        { !this.props.benchmark && !this.props.transitioning && <p>Click a bar on the chart to view additional benchmark and query information.</p>}
+        { !this.props.benchmark && !this.props.transitioning && this.renderNoSelectionMessage() }
       </div>
     );
   }

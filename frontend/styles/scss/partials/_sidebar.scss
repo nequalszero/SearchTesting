@@ -25,7 +25,19 @@
       &.left {
         border-right: 1px solid black;
       }
+
+      &.active {
+        border-bottom: none;
+      }
+
+      &.inactive {
+        background-color: #d5d0d0;
+      }
     }
+  }
+
+  p.no-selection {
+    padding: 20px 30px;
   }
 
   .query-gist {

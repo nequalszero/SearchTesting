@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 class SchemaGist extends React.Component {
+  // Avoid excessive rerendering when hovering over the bar chart.
   shouldComponentUpdate(nextProps) {
     return nextProps.schemaGistOpen !== this.props.schemaGistOpen;
   }
 
+  // Necessary to make the gist show up when loading gists after the initial
+  //   page load.
   componentDidUpdate() {
     if (this.props.schemaGistOpen) $('[data-gist-id]').gist();
   }

@@ -194,6 +194,18 @@ body {
   border-right: 1px solid black;
 }
 
+.sidebar-container .panels li.active {
+  border-bottom: none;
+}
+
+.sidebar-container .panels li.inactive {
+  background-color: #d5d0d0;
+}
+
+.sidebar-container p.no-selection {
+  padding: 20px 30px;
+}
+
 .sidebar-container .query-gist {
   width: 100%;
   height: -webkit-calc( 100% - 50px );
