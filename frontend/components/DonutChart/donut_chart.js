@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import isEqual from 'lodash/isEqual';
 
 import DonutChartShadow from './donut_chart_shadow';
 import DonutChartPath from './donut_chart_path';
+import DonutChartLegend from './donut_chart_legend';
 import CenterText from './center_text';
 
 class DonutChart extends React.Component {
@@ -18,15 +20,31 @@ class DonutChart extends React.Component {
                    .range(this.props.color);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(nextProps.data, this.props.data);
+  }
+
   constructShadow() {
     return (
-      <DonutChartShadow width={this.props.width}
-        height={this.props.height}
+      <DonutChartShadow color={this.color}
+        data={this.props.data}
+        diameter={this.props.height}
         innerRadiusRatio={this.props.innerRadiusRatio}
         pie={this.pie}
-        color={this.color}
+        shadowSize={this.props.shadowSize}
+        width={this.props.width}/>
+    );
+  }
+
+  constructLegend() {
+    return (
+      <DonutChartLegend color={this.color}
         data={this.props.data}
-        shadowSize={this.props.shadowSize}/>
+        height={this.props.height}
+        labelKey={this.props.labelKey}
+        pie={this.pie}
+        radius={10}
+        translateX={this.props.height}/>
     );
   }
 
@@ -44,8 +62,6 @@ class DonutChart extends React.Component {
   }
 
   render() {
-    let legend;
-
     return (
       <div>
         <svg className={this.props.className}>
@@ -55,17 +71,16 @@ class DonutChart extends React.Component {
 
             <DonutChartPath color={this.color}
               data={this.props.data}
+              diameter={this.props.height}
               formatLabel={this.props.formatLabel}
-              height={this.props.height}
               innerRadiusRatio={this.props.innerRadiusRatio}
               labelKey={this.props.labelKey}
               labels={this.props.labels}
-              pie={this.pie}
-              width={this.props.width}/>
+              pie={this.pie}/>
 
             { this.props.displaySumInCenter && this.constructCenterText() }
 
-            {legend}
+            { this.props.displayLegend && this.constructLegend()}
           </g>
         </svg>
       </div>
@@ -78,7 +93,8 @@ DonutChart.propTypes = {
   className: PropTypes.string.isRequired,
   color: PropTypes.arrayOf(PropTypes.string).isRequired,
   data: PropTypes.array.isRequired,
-  displaySumInCenter: PropTypes.bool.isRequired,
+  displaySumInCenter: PropTypes.bool,
+  displayLegend: PropTypes.bool,
   enable3D: PropTypes.bool,
   formatLabel: PropTypes.func,
   height: PropTypes.number,

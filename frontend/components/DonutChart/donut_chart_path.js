@@ -28,14 +28,14 @@ class DonutChartPath extends React.Component {
   updateD3(props) {
     // Used to store node references to the text labels.
     this.labelNodes = {};
-    this.outerRadius = props.height/2;
-    this.innerRadius = props.height/props.innerRadiusRatio;
+    this.outerRadius = props.diameter/2;
+    this.innerRadius = props.diameter/props.innerRadiusRatio;
 
     this.arc = d3.arc()
                  .outerRadius(this.outerRadius)
                  .innerRadius(this.innerRadius);
 
-    this.transform = `translate(${props.height/2}, ${props.height/2})`;
+    this.transform = `translate(${props.diameter/2}, ${props.diameter/2})`;
     this.createPaths(props);
   }
 
@@ -101,13 +101,12 @@ class DonutChartPath extends React.Component {
 DonutChartPath.propTypes = {
   color: PropTypes.func,
   data: PropTypes.array,
+  diameter: PropTypes.number,
   formatLabel: PropTypes.func,
-  height: PropTypes.number,
   innerRadiusRatio: PropTypes.number,
   labelKey: PropTypes.string,
   labels: PropTypes.bool,
   pie: PropTypes.func,
-  width: PropTypes.number,
 }
 
 DonutChartPath.defaultProps = {

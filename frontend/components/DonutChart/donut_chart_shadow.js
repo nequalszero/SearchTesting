@@ -5,15 +5,23 @@ import * as d3 from 'd3';
 class DonutChartShadow extends React.Component {
   constructor(props) {
     super(props);
-    this.radius = this.props.height;
-    this.outerRadius = (this.radius/this.props.innerRadiusRatio) + 1;
-    this.innerRadius = this.outerRadius - this.props.shadowSize;
+    this.updateD3(props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.updateD3(nextProps);
+  }
+
+  updateD3(props) {
+    this.outerRadius = (props.diameter/props.innerRadiusRatio) + 1;
+    this.innerRadius = this.outerRadius - props.shadowSize;
 
     this.arc = d3.arc()
                  .outerRadius(this.outerRadius)
                  .innerRadius(this.innerRadius);
 
-    this.transform = `translate(${this.radius/2}, ${this.radius/2})`;
+    this.transform = `translate(${props.diameter/2}, ${props.diameter/2})`;
+    this.paths = this.createShadowPaths();
   }
 
   createShadowPaths() {
@@ -28,11 +36,9 @@ class DonutChartShadow extends React.Component {
   }
 
   render() {
-    const paths = this.createShadowPaths();
-
     return (
       <g transform={this.transform}>
-        {paths}
+        {this.paths}
       </g>
     );
   }
@@ -43,13 +49,13 @@ DonutChartShadow.defaultProps = {
 };
 
 DonutChartShadow.propTypes = {
-    width: PropTypes.number,
-    height: PropTypes.number,
-    data: PropTypes.array,
-    pie: PropTypes.func,
-    color: PropTypes.func,
-    innerRadiusRatio: PropTypes.number,
-    shadowSize: PropTypes.number
+  color: PropTypes.func,
+  data: PropTypes.array,
+  diameter: PropTypes.number,
+  innerRadiusRatio: PropTypes.number,
+  pie: PropTypes.func,
+  shadowSize: PropTypes.number,
+  width: PropTypes.number,
 };
 
 export default DonutChartShadow;

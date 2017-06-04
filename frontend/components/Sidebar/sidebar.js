@@ -42,6 +42,7 @@ class Sidebar extends React.Component {
         color={['#41B787', '#6352B9', '#B65480', '#D5735A']}
         data={donutDataObjects}
         displaySumInCenter={true}
+        displayLegend={true}
         enable3D={true}
         formatLabel={(time) => `${round(time, 2)}s`}
         height={300}
@@ -58,8 +59,14 @@ class Sidebar extends React.Component {
     return (
       <div className="sidebar-container">
         <nav className="panels">
-          <li className={this.getPanelClass('benchmark')} onClick={() => this.props.handlePanelSelect('benchmark')}>Benchmark</li>
-          <li className={this.getPanelClass('gist')} onClick={() => this.props.handlePanelSelect('gist')}>View Query</li>
+          <li className={this.getPanelClass('benchmark')}
+            onClick={() => this.props.handlePanelSelect('benchmark')}>
+            Benchmark
+          </li>
+          <li className={this.getPanelClass('gist')}
+            onClick={() => this.props.handlePanelSelect('gist')}>
+            View Query
+          </li>
         </nav>
         { (this.props.activePanel === "benchmark") && this.props.benchmark && this.buildDonutChart() }
         { (this.props.activePanel === "gist") && this.props.queryGistId && <QueryGist queryGistId={this.props.queryGistId} /> }
