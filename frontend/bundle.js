@@ -29719,7 +29719,9 @@ var SchemaGist = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: this.getClassName() },
-          _react2.default.createElement('code', { 'data-gist-id': this.props.gistId, 'data-gist-show-spinner': 'true' })
+          _react2.default.createElement('code', { 'data-gist-id': this.props.gistId,
+            'data-gist-show-spinner': 'true',
+            'data-gist-enable-cache': 'true' })
         )
       );
     }
@@ -29826,7 +29828,8 @@ var QueryGist = function (_React$Component) {
         { className: 'query-gist ' + this.props.queryGistId },
         _react2.default.createElement('code', { 'data-gist-id': this.props.queryGistId,
           'data-gist-show-spinner': 'true',
-          'data-gist-hide-footer': 'true' })
+          'data-gist-hide-footer': 'true',
+          'data-gist-enable-cache': 'true' })
       );
     }
   }]);
