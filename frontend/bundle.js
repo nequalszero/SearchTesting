@@ -23782,6 +23782,7 @@ var Axis = function (_React$Component) {
   function Axis(props) {
     _classCallCheck(this, Axis);
 
+    // Using state to update axis label positions after new axis rendering.
     var _this = _possibleConstructorReturn(this, (Axis.__proto__ || Object.getPrototypeOf(Axis)).call(this, props));
 
     _this.handleTickClick = function () {
@@ -23808,11 +23809,13 @@ var Axis = function (_React$Component) {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(newProps) {
       this.updateD3(newProps);
+      this.setState({ mounted: false });
     }
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
       this.renderAxis();
+      if (!this.state.mounted) this.setState({ mounted: true });
     }
   }, {
     key: 'calculateAxisLabelTransform',
@@ -23954,6 +23957,7 @@ Axis.propTypes = {
   axisRef: _propTypes2.default.func.isRequired,
   axisType: _propTypes2.default.string.isRequired,
   barPadding: _propTypes2.default.number,
+  className: _propTypes2.default.string,
   handleTickClick: _propTypes2.default.func,
   handleTickMouseOver: _propTypes2.default.func,
   handleTickMouseOut: _propTypes2.default.func,
@@ -27876,7 +27880,7 @@ var App = function (_React$Component) {
     _this.gistIds = _results2.default.gist_ids;
 
     _this.state = {
-      currentKey: _this.dataKeys[0],
+      currentKey: _this.dataKeys[0].stringForm,
       schemaGistOpen: false,
       barChart: {
         hoverKey: null
@@ -27960,7 +27964,9 @@ var App = function (_React$Component) {
           _react2.default.createElement(_DataSelectionArea2.default, { handleSelection: function handleSelection(dataKey) {
               return _this2.changeDataSet(dataKey);
             },
-            dataKeys: this.dataKeys,
+            dataKeys: this.dataKeys.map(function (dataKey) {
+              return dataKey.stringForm;
+            }),
             currentKey: this.state.currentKey,
             description: description }),
           _react2.default.createElement(
@@ -30048,23 +30054,63 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.constructQueryGistElements = exports.constructDataKeysAndDataMap = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 // Takes a primary dataKey (string) and an optional details object.
 // The details object should have keys for queries and keywords, both of which
 //   should have number values.
-var constructDataKey = function constructDataKey(dataKey) {
-  var details = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+var DataKey = function () {
+  function DataKey(dataKey) {
+    var details = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-  if (!details) {
-    return "" + dataKey;
+    _classCallCheck(this, DataKey);
+
+    this.dataKey = dataKey;
+    this.details = details;
+    this.queries = details ? details.queries : null;
+    this.keywords = details ? details.keywords : null;
+    this.stringForm = this.constructDataKey();
   }
-  if (!details.queries || !details.keywords) throw "Error in application_data_helper#constructDataKey: details missing queries or keywords key.";
-  return dataKey + " - queries: " + details.queries + " keywords: " + details.keywords;
+
+  _createClass(DataKey, [{
+    key: "constructDataKey",
+    value: function constructDataKey() {
+      if (!this.details) {
+        return "" + this.dataKey;
+      }
+      if (!this.details.queries || !this.details.keywords) throw "Error in application_data_helper#constructDataKey: details missing queries or keywords key.";
+      return this.dataKey + " - queries: " + this.details.queries + " keywords: " + this.details.keywords;
+    }
+  }]);
+
+  return DataKey;
+}();
+
+// Compare DataKey instances by dataKey, then queries, then keywords.
+
+
+DataKey.comparator = function (a, b) {
+  var compare = function compare(val1, val2) {
+    if (val1 === val2) return 0;else if (val1 < val2) return -1;else return 1;
+  };
+
+  if (a.dataKey == b.dataKey) {
+    if (a.queries == b.queries) {
+      return compare(a.keywords, b.keywords);
+    }
+
+    return compare(a.queries, b.queries);
+  }
+
+  return compare(a.dataKey, b.dataKey);
 };
 
 // Processes applicationData object and returns a new object with a dataKeys array
@@ -30083,16 +30129,18 @@ var constructDataKeysAndDataMap = exports.constructDataKeysAndDataMap = function
     if (Array.isArray(data)) {
       data.forEach(function (subset) {
         if (!subset.details) throw "Error in application_data_helper#constructDataMap: subset missing details key";
-        var newDataKey = constructDataKey(dataKey, subset.details);
+        var newDataKey = new DataKey(dataKey, subset.details);
         dataKeys.push(newDataKey);
-        dataMap[newDataKey] = subset;
+        dataMap[newDataKey.stringForm] = subset;
       });
     } else {
-      var newDataKey = constructDataKey(dataKey);
+      var newDataKey = new DataKey(dataKey);
       dataKeys.push(newDataKey);
-      dataMap[newDataKey] = data;
+      dataMap[newDataKey.stringForm] = data;
     }
   });
+
+  dataKeys.sort(DataKey.comparator);
 
   return { dataKeys: dataKeys, dataMap: dataMap };
 };
@@ -30804,7 +30852,7 @@ exports = module.exports = __webpack_require__(142)();
 
 
 // module
-exports.push([module.i, "/* PHASE 0: Reset */\nhtml, body, header, nav, h1, a,\nul, li, strong, main, button, i,\nsection, img, div, h2, p, form,\nfieldset, label, input, textarea,\nspan, article, footer, time, small {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  outline: 0;\n  font: inherit;\n  color: inherit;\n  text-align: inherit;\n  text-decoration: inherit;\n  vertical-align: inherit;\n  box-sizing: inherit;\n  background: transparent;\n}\n\nbody {\n  font-family: \"Helvetica Neue, Helvetica, Liberation Sans, Arial, sans-serif\";\n}\n\nul {\n  list-style: none;\n}\n\nimg {\n  display: block;\n}\n\ninput[type=\"password\"],\ninput[type=\"email\"],\ninput[type=\"text\"],\ninput[type=\"submit\"],\ntextarea,\nbutton {\n  /*\n  Get rid of native styling. Read more here:\n  http://css-tricks.com/almanac/properties/a/appearance/\n  */\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n\nbutton,\ninput[type=\"submit\"] {\n  cursor: pointer;\n}\n\n/* Clearfix */\n.group:after {\n  content: \"\";\n  display: block;\n  clear: both;\n}\n\nbody {\n  font-family: 'Roboto Mono', monospace;\n}\n\n.data-selection-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  width: 1175px;\n  border: 1px solid black;\n  box-sizing: border-box;\n  padding: 20px;\n  height: 155px;\n}\n\n.data-selection-container .data-selection-area, .data-selection-container .description-area {\n  display: flex;\n}\n\n.data-selection-container .data-selection-area h4, .data-selection-container .description-area h4 {\n  margin: 0px;\n  padding: 10px 5px;\n  padding-left: 0px;\n  white-space: nowrap;\n}\n\n.data-selection-container .data-selection-area {\n  flex-direction: row;\n}\n\n.data-selection-container .description-area {\n  flex-direction: column;\n}\n\n.data-selection-container select {\n  font-family: 'Roboto Mono', monospace;\n  padding: 0px 5px;\n  height: auto;\n}\n\n.bar-chart-and-sidebar-container {\n  display: flex;\n  flex-direction: row;\n  width: 1175px;\n}\n\n.bar-chart-area {\n  display: block;\n  height: 600px;\n  width: 575px;\n  border: 1px solid black;\n  font-family: 'Roboto Mono', monospace;\n  font-weight: normal;\n  font-size: 1em;\n  box-sizing: border-box;\n}\n\n.axis {\n  font-size: 0.9em;\n  font-family: 'Roboto Mono', monospace;\n}\n\n.axis-label {\n  font-weight: normal;\n}\n\n.axis-x > g.tick > text {\n  font-weight: normal;\n}\n\n.axis-x > g.tick > text.active {\n  fill: #e81717;\n}\n\n.axis-x > g.tick > text:hover {\n  cursor: pointer;\n}\n\n.axis-x > g.tick > text.hovering-over {\n  fill: #e81717;\n}\n\n.chart-title {\n  font-weight: bold;\n}\n\n.chart-bar {\n  fill: #74d3eb;\n}\n\n.chart-bar.active {\n  fill: #17416e;\n}\n\n.chart-bar:hover {\n  cursor: pointer;\n}\n\n.chart-bar.hovering-over {\n  fill: #17416e;\n}\n\n.gridline > g.tick > line {\n  stroke: #ececed;\n  border: 0px 0px;\n}\n\n.sidebar-container {\n  box-sizing: border-box;\n  width: 600px;\n  height: 600px;\n  border: 1px solid black;\n}\n\n.sidebar-container .panels {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  list-style: none;\n}\n\n.sidebar-container .panels li {\n  font-size: 16px;\n  width: 50%;\n  padding-top: 15px;\n  padding-bottom: 15px;\n  border-bottom: 1px solid black;\n  text-align: center;\n}\n\n.sidebar-container .panels li:hover {\n  cursor: pointer;\n}\n\n.sidebar-container .panels li.left {\n  border-right: 1px solid black;\n}\n\n.sidebar-container .panels li.active {\n  border-bottom: none;\n}\n\n.sidebar-container .panels li.inactive {\n  background-color: #d5d0d0;\n}\n\n.sidebar-container p.no-selection {\n  padding: 20px 30px;\n}\n\n.sidebar-container .query-gist {\n  width: 100%;\n  height: -webkit-calc( 100% - 50px );\n  height: -moz-calc( 100% - 50px );\n  height: calc( 100% - 50px );\n  overflow-y: auto;\n}\n\n.sidebar-container .query-gist code {\n  height: 100%;\n  width: 100%;\n}\n\n.donut-chart-container {\n  width: 600px;\n  height: 400px;\n}\n\n.donut-chart-container .donut-chart-center-text {\n  font-size: 20px;\n}\n\n.schema-gist {\n  width: 750px;\n  padding-top: 20px;\n}\n\n.schema-gist-toggle-bar {\n  font-size: 20px;\n  border: 1px solid black;\n  padding: 5px 5px;\n}\n\n.schema-gist-toggle-bar:hover {\n  cursor: pointer;\n}\n\n.schema-gist-container {\n  /* Initially we don't want any height, and we want the contents to be hidden */\n  max-height: 0;\n  overflow: hidden;\n  /* Set our transitions up. */\n  -webkit-transition: max-height 600ms linear;\n  -moz-transition: max-height 600ms linear;\n  transition: max-height 600ms linear;\n}\n\n.schema-gist-container.open {\n  max-height: 875px;\n  margin-bottom: 20px;\n}\n", ""]);
+exports.push([module.i, "/* PHASE 0: Reset */\nhtml, body, header, nav, h1, a,\nul, li, strong, main, button, i,\nsection, img, div, h2, p, form,\nfieldset, label, input, textarea,\nspan, article, footer, time, small {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  outline: 0;\n  font: inherit;\n  color: inherit;\n  text-align: inherit;\n  text-decoration: inherit;\n  vertical-align: inherit;\n  box-sizing: inherit;\n  background: transparent;\n}\n\nbody {\n  font-family: \"Helvetica Neue, Helvetica, Liberation Sans, Arial, sans-serif\";\n}\n\nul {\n  list-style: none;\n}\n\nimg {\n  display: block;\n}\n\ninput[type=\"password\"],\ninput[type=\"email\"],\ninput[type=\"text\"],\ninput[type=\"submit\"],\ntextarea,\nbutton {\n  /*\n  Get rid of native styling. Read more here:\n  http://css-tricks.com/almanac/properties/a/appearance/\n  */\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n\nbutton,\ninput[type=\"submit\"] {\n  cursor: pointer;\n}\n\n/* Clearfix */\n.group:after {\n  content: \"\";\n  display: block;\n  clear: both;\n}\n\nbody {\n  font-family: 'Roboto Mono', monospace;\n}\n\n#root {\n  display: flex;\n  justify-content: center;\n}\n\n.data-selection-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  width: 1175px;\n  border: 1px solid black;\n  box-sizing: border-box;\n  padding: 20px;\n  height: 155px;\n}\n\n.data-selection-container .data-selection-area, .data-selection-container .description-area {\n  display: flex;\n}\n\n.data-selection-container .data-selection-area h4, .data-selection-container .description-area h4 {\n  margin: 0px;\n  padding: 10px 5px;\n  padding-left: 0px;\n  white-space: nowrap;\n}\n\n.data-selection-container .data-selection-area {\n  flex-direction: row;\n}\n\n.data-selection-container .description-area {\n  flex-direction: column;\n}\n\n.data-selection-container select {\n  font-family: 'Roboto Mono', monospace;\n  padding: 0px 5px;\n  height: auto;\n}\n\n.bar-chart-and-sidebar-container {\n  display: flex;\n  flex-direction: row;\n  width: 1175px;\n}\n\n.bar-chart-area {\n  display: block;\n  height: 600px;\n  width: 575px;\n  border: 1px solid black;\n  font-family: 'Roboto Mono', monospace;\n  font-weight: normal;\n  font-size: 1em;\n  box-sizing: border-box;\n}\n\n.axis {\n  font-size: 0.9em;\n  font-family: 'Roboto Mono', monospace;\n}\n\n.axis-label {\n  font-weight: normal;\n}\n\n.axis-x > g.tick > text {\n  font-weight: normal;\n}\n\n.axis-x > g.tick > text.active {\n  fill: #e81717;\n}\n\n.axis-x > g.tick > text:hover {\n  cursor: pointer;\n}\n\n.axis-x > g.tick > text.hovering-over {\n  fill: #e81717;\n}\n\n.chart-title {\n  font-weight: bold;\n}\n\n.chart-bar {\n  fill: #74d3eb;\n}\n\n.chart-bar.active {\n  fill: #17416e;\n}\n\n.chart-bar:hover {\n  cursor: pointer;\n}\n\n.chart-bar.hovering-over {\n  fill: #17416e;\n}\n\n.gridline > g.tick > line {\n  stroke: #ececed;\n  border: 0px 0px;\n}\n\n.sidebar-container {\n  box-sizing: border-box;\n  width: 600px;\n  height: 600px;\n  border: 1px solid black;\n}\n\n.sidebar-container .panels {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  list-style: none;\n}\n\n.sidebar-container .panels li {\n  font-size: 16px;\n  width: 50%;\n  padding-top: 15px;\n  padding-bottom: 15px;\n  border-bottom: 1px solid black;\n  text-align: center;\n}\n\n.sidebar-container .panels li:hover {\n  cursor: pointer;\n}\n\n.sidebar-container .panels li.left {\n  border-right: 1px solid black;\n}\n\n.sidebar-container .panels li.active {\n  border-bottom: none;\n}\n\n.sidebar-container .panels li.inactive {\n  background-color: #d5d0d0;\n}\n\n.sidebar-container p.no-selection {\n  padding: 20px 30px;\n}\n\n.sidebar-container .query-gist {\n  width: 100%;\n  height: -webkit-calc( 100% - 50px );\n  height: -moz-calc( 100% - 50px );\n  height: calc( 100% - 50px );\n  overflow-y: auto;\n  padding-top: 5px;\n}\n\n.sidebar-container .query-gist code {\n  height: 100%;\n  width: 100%;\n}\n\n.sidebar-container .query-gist .gist-file {\n  border-top: none;\n  border-bottom: none;\n}\n\n.donut-chart-container {\n  width: 600px;\n  height: 400px;\n}\n\n.donut-chart-container .donut-chart-center-text {\n  font-size: 20px;\n}\n\n.schema-gist {\n  width: 750px;\n  padding-top: 20px;\n}\n\n.schema-gist-toggle-bar {\n  font-size: 20px;\n  border: 1px solid black;\n  padding: 5px 5px;\n}\n\n.schema-gist-toggle-bar:hover {\n  cursor: pointer;\n}\n\n.schema-gist-container {\n  /* Initially we don't want any height, and we want the contents to be hidden */\n  max-height: 0;\n  overflow: hidden;\n  /* Set our transitions up. */\n  -webkit-transition: max-height 600ms linear;\n  -moz-transition: max-height 600ms linear;\n  transition: max-height 600ms linear;\n}\n\n.schema-gist-container.open {\n  max-height: 875px;\n  margin-bottom: 20px;\n}\n", ""]);
 
 // exports
 
