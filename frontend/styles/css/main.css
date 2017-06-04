@@ -76,6 +76,24 @@ body {
   height: 155px;
 }
 
+.data-selection-container .data-selector-schema-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.data-selection-container .data-selector-schema-button-container .open-schema {
+  margin-right: 20px;
+  padding: 10px 20px;
+  background-color: #00ac16;
+  border-radius: 8px;
+}
+
+.data-selection-container .data-selector-schema-button-container .open-schema:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
 .data-selection-container .data-selection-area, .data-selection-container .description-area {
   display: flex;
 }
@@ -239,32 +257,8 @@ body {
   font-size: 20px;
 }
 
-.schema-gist {
-  width: 750px;
-  padding-top: 20px;
-}
-
-.schema-gist-toggle-bar {
-  font-size: 20px;
-  border: 1px solid black;
-  padding: 5px 5px;
-}
-
-.schema-gist-toggle-bar:hover {
-  cursor: pointer;
-}
-
 .schema-gist-container {
-  /* Initially we don't want any height, and we want the contents to be hidden */
-  max-height: 0;
-  overflow: hidden;
-  /* Set our transitions up. */
-  -webkit-transition: max-height 600ms linear;
-  -moz-transition: max-height 600ms linear;
-  transition: max-height 600ms linear;
-}
-
-.schema-gist-container.open {
-  max-height: 875px;
-  margin-bottom: 20px;
+  width: 750px;
+  height: auto;
+  overflow-y: auto;
 }

@@ -6,19 +6,23 @@ import Description from './Description';
 const DataSelectionArea = (props) => {
   return (
     <div className="data-selection-container">
-      <DataSelector currentKey={props.currentKey}
-        dataKeys={props.dataKeys}
-        handleSelection={(e) => props.handleSelection(e.target.value)}/>
+      <div className="data-selector-schema-button-container">
+        <DataSelector currentKey={props.currentKey}
+          dataKeys={props.dataKeys}
+          handleSelection={(e) => props.handleSelection(e.target.value)}/>
+        <button className="open-schema" onClick={props.toggleSchemaGist}>View Schema</button>
+      </div>
       <Description description={props.description}/>
     </div>
   );
 }
 
 DataSelectionArea.propTypes = {
-  dataKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
-  handleSelection: PropTypes.func.isRequired,
   currentKey: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired
+  dataKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
+  description: PropTypes.string.isRequired,
+  handleSelection: PropTypes.func.isRequired,
+  toggleSchemaGist: PropTypes.func.isRequired,
 };
 
 export default DataSelectionArea;

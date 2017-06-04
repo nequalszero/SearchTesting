@@ -5,7 +5,7 @@ import ColorBar from './D3Test/color_bar';
 import DataSelectionArea from  './DataSelectionArea';
 import BarChart from './BarChart';
 import Sidebar from './Sidebar';
-import SchemaGist from './SchemaGist';
+import SchemaGistModal from './SchemaGistModal';
 
 // Function that processes the applicationData, extracting nested data objects.
 // Returns a dataKeys array and dataMap object that maps dataKeys to the data objects.
@@ -131,15 +131,16 @@ class App extends React.Component {
           <DataSelectionArea handleSelection={(dataKey) => this.changeDataSet(dataKey)}
             dataKeys={this.dataKeys.map((dataKey) => dataKey.stringForm)}
             currentKey={this.state.currentKey}
-            description={description}/>
+            description={description}
+            toggleSchemaGist={this.toggleSchemaGist}/>
           <div className="bar-chart-and-sidebar-container">
             <BarChart {...chartProps}/>
             <Sidebar {...this.state.sidebar}
               handlePanelSelect={(field) => this.selectSidebarPanel(field)}/>
           </div>
         </div>
-        <SchemaGist handleClick={this.toggleSchemaGist}
-          schemaGistOpen={this.state.schemaGistOpen}
+        <SchemaGistModal onRequestClose={this.toggleSchemaGist}
+          modalIsOpen={this.state.schemaGistOpen}
           gistId={this.gistIds.schema}/>
       </div>
     );
