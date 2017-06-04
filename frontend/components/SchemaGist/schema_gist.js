@@ -33,7 +33,10 @@ class SchemaGist extends React.Component {
           {this.getBarText()}
         </div>
         <div className={this.getClassName()}>
-          <code data-gist-id={this.props.gistId} data-gist-show-spinner="true"></code>
+          <code data-gist-id={this.props.gistId}
+            data-gist-show-spinner="true"
+            data-gist-enable-cache="true">
+          </code>
         </div>
       </div>
     );

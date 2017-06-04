@@ -24,7 +24,8 @@ class QueryGist extends React.Component {
       <div className={`query-gist ${this.props.queryGistId}`}>
         <code data-gist-id={this.props.queryGistId}
           data-gist-show-spinner="true"
-          data-gist-hide-footer="true">
+          data-gist-hide-footer="true"
+          data-gist-enable-cache="true">
         </code>
       </div>
     );
