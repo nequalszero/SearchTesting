@@ -9,7 +9,9 @@ import { createAxisLabelTransform } from '../../lib/axis_helper';
 class Axis extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {mounted: false}
+
+    // Using state to update axis label positions after new axis rendering.
+    this.state = {mounted: false};
 
     this.scale = this.selectScaleType(props.scaleType)
     this.axis = this.selectAxisType(props.axisType, this.scale);
@@ -20,15 +22,17 @@ class Axis extends React.Component {
   componentDidMount() {
     this.renderAxis();
     this.props.axisRef(this.scale);
-    this.setState({mounted: true})
+    this.setState({mounted: true});
   }
 
   componentWillReceiveProps(newProps) {
     this.updateD3(newProps);
+    this.setState({mounted: false});
   }
 
   componentDidUpdate() {
     this.renderAxis();
+    if (!this.state.mounted) this.setState({mounted: true});
   }
 
   calculateAxisLabelTransform() {
@@ -156,6 +160,7 @@ Axis.propTypes = {
   axisRef: PropTypes.func.isRequired,
   axisType: PropTypes.string.isRequired,
   barPadding: PropTypes.number,
+  className: PropTypes.string,
   handleTickClick: PropTypes.func,
   handleTickMouseOver: PropTypes.func,
   handleTickMouseOut: PropTypes.func,

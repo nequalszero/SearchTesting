@@ -3,12 +3,41 @@ import React from 'react';
 // Takes a primary dataKey (string) and an optional details object.
 // The details object should have keys for queries and keywords, both of which
 //   should have number values.
-const constructDataKey = (dataKey, details = null) => {
-  if (!details) {
-    return `${dataKey}`;
+class DataKey {
+  constructor(dataKey, details = null) {
+    this.dataKey = dataKey;
+    this.details = details;
+    this.queries = details ? details.queries : null;
+    this.keywords = details ? details.keywords : null;
+    this.stringForm = this.constructDataKey();
   }
-  if (!details.queries || !details.keywords) throw "Error in application_data_helper#constructDataKey: details missing queries or keywords key."
-  return `${dataKey} - queries: ${details.queries} keywords: ${details.keywords}`;
+
+  constructDataKey() {
+    if (!this.details) {
+      return `${this.dataKey}`;
+    }
+    if (!this.details.queries || !this.details.keywords) throw "Error in application_data_helper#constructDataKey: details missing queries or keywords key."
+    return `${this.dataKey} - queries: ${this.details.queries} keywords: ${this.details.keywords}`;
+  }
+}
+
+// Compare DataKey instances by dataKey, then queries, then keywords.
+DataKey.comparator = (a, b) => {
+  const compare = (val1, val2) => {
+    if (val1 === val2) return 0;
+    else if (val1 < val2) return -1;
+    else return 1;
+  }
+
+  if (a.dataKey == b.dataKey) {
+    if (a.queries == b.queries) {
+      return compare(a.keywords, b.keywords);
+    }
+
+    return compare(a.queries, b.queries);
+  }
+
+  return compare(a.dataKey, b.dataKey);
 }
 
 // Processes applicationData object and returns a new object with a dataKeys array
@@ -27,16 +56,18 @@ export const constructDataKeysAndDataMap = (applicationData) => {
     if (Array.isArray(data)) {
       data.forEach((subset) => {
         if (!subset.details) throw "Error in application_data_helper#constructDataMap: subset missing details key";
-        let newDataKey = constructDataKey(dataKey, subset.details)
+        let newDataKey = new DataKey(dataKey, subset.details)
         dataKeys.push(newDataKey);
-        dataMap[newDataKey] = subset;
+        dataMap[newDataKey.stringForm] = subset;
       })
     } else {
-      let newDataKey = constructDataKey(dataKey)
+      let newDataKey = new DataKey(dataKey)
       dataKeys.push(newDataKey);
-      dataMap[newDataKey] = data;
+      dataMap[newDataKey.stringForm] = data;
     }
   })
+
+  dataKeys.sort(DataKey.comparator);
 
   return {dataKeys, dataMap};
 }

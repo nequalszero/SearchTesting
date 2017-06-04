@@ -20,7 +20,7 @@ class App extends React.Component {
     this.gistIds = applicationData.gist_ids;
 
     this.state = {
-      currentKey: this.dataKeys[0],
+      currentKey: this.dataKeys[0].stringForm,
       schemaGistOpen: false,
       barChart: {
         hoverKey: null
@@ -129,7 +129,7 @@ class App extends React.Component {
       <div className="app-container">
         <div className="data-selector-and-chart-area">
           <DataSelectionArea handleSelection={(dataKey) => this.changeDataSet(dataKey)}
-            dataKeys={this.dataKeys}
+            dataKeys={this.dataKeys.map((dataKey) => dataKey.stringForm)}
             currentKey={this.state.currentKey}
             description={description}/>
           <div className="bar-chart-and-sidebar-container">

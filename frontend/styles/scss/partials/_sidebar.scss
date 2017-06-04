@@ -46,10 +46,16 @@
     height: unquote("-moz-calc( 100% - 50px )");
     height: unquote("calc( 100% - 50px )");
     overflow-y: auto;
+    padding-top: 5px;
 
     code {
       height: 100%;
       width: 100%;
+    }
+
+    .gist-file {
+      border-top: none;
+      border-bottom: none;
     }
   }
 }

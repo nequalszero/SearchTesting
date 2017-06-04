@@ -60,6 +60,11 @@ body {
   font-family: 'Roboto Mono', monospace;
 }
 
+#root {
+  display: flex;
+  justify-content: center;
+}
+
 .data-selection-container {
   display: flex;
   flex-direction: column;
@@ -212,11 +217,17 @@ body {
   height: -moz-calc( 100% - 50px );
   height: calc( 100% - 50px );
   overflow-y: auto;
+  padding-top: 5px;
 }
 
 .sidebar-container .query-gist code {
   height: 100%;
   width: 100%;
+}
+
+.sidebar-container .query-gist .gist-file {
+  border-top: none;
+  border-bottom: none;
 }
 
 .donut-chart-container {
