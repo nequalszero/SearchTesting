@@ -30661,22 +30661,31 @@ var Sidebar = function (_React$Component) {
         }
       });
 
-      return _react2.default.createElement(_DonutChart2.default, { className: 'donut-chart-container',
-        color: ['#41B787', '#6352B9', '#B65480', '#D5735A'],
-        data: donutDataObjects,
-        displaySumInCenter: true,
-        displayLegend: true,
-        enable3D: true,
-        formatLabel: function formatLabel(time) {
-          return (0, _miscellaneous_functions.round)(time, 2) + 's';
-        },
-        height: 300,
-        labelKey: 'key',
-        labels: true,
-        translateX: 30,
-        translateY: 30,
-        valueKey: 'value',
-        width: 300 });
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'p',
+          { className: 'donut-chart-title' },
+          this.props.queryKey
+        ),
+        _react2.default.createElement(_DonutChart2.default, { className: 'donut-chart-container',
+          color: ['#41B787', '#6352B9', '#B65480', '#D5735A'],
+          data: donutDataObjects,
+          displaySumInCenter: true,
+          displayLegend: true,
+          enable3D: true,
+          formatLabel: function formatLabel(time) {
+            return (0, _miscellaneous_functions.round)(time, 2) + 's';
+          },
+          height: 300,
+          labelKey: 'key',
+          labels: true,
+          translateX: 30,
+          translateY: 30,
+          valueKey: 'value',
+          width: 300 })
+      );
     }
   }, {
     key: 'render',
@@ -30717,10 +30726,11 @@ var Sidebar = function (_React$Component) {
 }(_react2.default.Component);
 
 Sidebar.propTypes = {
-  queryGistId: _propTypes2.default.string,
-  benchmark: _propTypes2.default.object,
   activePanel: _propTypes2.default.string.isRequired,
+  benchmark: _propTypes2.default.object,
   handlePanelSelect: _propTypes2.default.func.isRequired,
+  queryGistId: _propTypes2.default.string,
+  queryKey: _propTypes2.default.string,
   transitioning: _propTypes2.default.bool.isRequired
 };
 
@@ -32303,7 +32313,7 @@ exports = module.exports = __webpack_require__(147)();
 
 
 // module
-exports.push([module.i, "/* PHASE 0: Reset */\nhtml, body, header, nav, h1, a,\nul, li, strong, main, button, i,\nsection, img, div, h2, p, form,\nfieldset, label, input, textarea,\nspan, article, footer, time, small {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  outline: 0;\n  font: inherit;\n  color: inherit;\n  text-align: inherit;\n  text-decoration: inherit;\n  vertical-align: inherit;\n  box-sizing: inherit;\n  background: transparent;\n}\n\nbody {\n  font-family: \"Helvetica Neue, Helvetica, Liberation Sans, Arial, sans-serif\";\n}\n\nul {\n  list-style: none;\n}\n\nimg {\n  display: block;\n}\n\ninput[type=\"password\"],\ninput[type=\"email\"],\ninput[type=\"text\"],\ninput[type=\"submit\"],\ntextarea,\nbutton {\n  /*\n  Get rid of native styling. Read more here:\n  http://css-tricks.com/almanac/properties/a/appearance/\n  */\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n\nbutton,\ninput[type=\"submit\"] {\n  cursor: pointer;\n}\n\n/* Clearfix */\n.group:after {\n  content: \"\";\n  display: block;\n  clear: both;\n}\n\nbody {\n  font-family: 'Roboto Mono', monospace;\n}\n\n#root {\n  display: flex;\n  justify-content: center;\n}\n\n.data-selection-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  width: 1175px;\n  border: 1px solid black;\n  box-sizing: border-box;\n  padding: 20px;\n  height: 155px;\n}\n\n.data-selection-container .data-selector-schema-button-container {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n\n.data-selection-container .data-selector-schema-button-container .open-schema {\n  margin-right: 20px;\n  padding: 10px 20px;\n  background-color: #00ac16;\n  border-radius: 8px;\n}\n\n.data-selection-container .data-selector-schema-button-container .open-schema:hover {\n  cursor: pointer;\n  opacity: 0.8;\n}\n\n.data-selection-container .data-selection-area, .data-selection-container .description-area {\n  display: flex;\n}\n\n.data-selection-container .data-selection-area h4, .data-selection-container .description-area h4 {\n  margin: 0px;\n  padding: 10px 5px;\n  padding-left: 0px;\n  white-space: nowrap;\n}\n\n.data-selection-container .data-selection-area {\n  flex-direction: row;\n}\n\n.data-selection-container .description-area {\n  flex-direction: column;\n}\n\n.data-selection-container select {\n  font-family: 'Roboto Mono', monospace;\n  padding: 0px 5px;\n  height: auto;\n}\n\n.bar-chart-and-sidebar-container {\n  display: flex;\n  flex-direction: row;\n  width: 1175px;\n}\n\n.bar-chart-area {\n  display: block;\n  height: 600px;\n  width: 575px;\n  border: 1px solid black;\n  font-family: 'Roboto Mono', monospace;\n  font-weight: normal;\n  font-size: 1em;\n  box-sizing: border-box;\n}\n\n.axis {\n  font-size: 0.9em;\n  font-family: 'Roboto Mono', monospace;\n}\n\n.axis-label {\n  font-weight: normal;\n}\n\n.axis-x > g.tick > text {\n  font-weight: normal;\n}\n\n.axis-x > g.tick > text.active {\n  fill: #e81717;\n}\n\n.axis-x > g.tick > text:hover {\n  cursor: pointer;\n}\n\n.axis-x > g.tick > text.hovering-over {\n  fill: #e81717;\n}\n\n.chart-title {\n  font-weight: bold;\n}\n\n.chart-bar {\n  fill: #74d3eb;\n}\n\n.chart-bar.active {\n  fill: #17416e;\n}\n\n.chart-bar:hover {\n  cursor: pointer;\n}\n\n.chart-bar.hovering-over {\n  fill: #17416e;\n}\n\n.gridline > g.tick > line {\n  stroke: #ececed;\n  border: 0px 0px;\n}\n\n.sidebar-container {\n  box-sizing: border-box;\n  width: 600px;\n  height: 600px;\n  border: 1px solid black;\n}\n\n.sidebar-container .panels {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  list-style: none;\n}\n\n.sidebar-container .panels li {\n  font-size: 16px;\n  width: 50%;\n  padding-top: 15px;\n  padding-bottom: 15px;\n  border-bottom: 1px solid black;\n  text-align: center;\n}\n\n.sidebar-container .panels li:hover {\n  cursor: pointer;\n}\n\n.sidebar-container .panels li.left {\n  border-right: 1px solid black;\n}\n\n.sidebar-container .panels li.active {\n  border-bottom: none;\n}\n\n.sidebar-container .panels li.inactive {\n  background-color: #d5d0d0;\n}\n\n.sidebar-container p.no-selection {\n  padding: 20px 30px;\n}\n\n.sidebar-container .query-gist {\n  width: 100%;\n  height: -webkit-calc( 100% - 50px );\n  height: -moz-calc( 100% - 50px );\n  height: calc( 100% - 50px );\n  overflow-y: auto;\n  padding-top: 5px;\n}\n\n.sidebar-container .query-gist code {\n  height: 100%;\n  width: 100%;\n}\n\n.sidebar-container .query-gist .gist-file {\n  border-top: none;\n  border-bottom: none;\n}\n\n.donut-chart-container {\n  width: 600px;\n  height: 400px;\n}\n\n.donut-chart-container .donut-chart-center-text {\n  font-size: 20px;\n}\n\n.schema-gist-container {\n  width: 750px;\n  height: auto;\n  overflow-y: auto;\n}\n", ""]);
+exports.push([module.i, "/* PHASE 0: Reset */\nhtml, body, header, nav, h1, a,\nul, li, strong, main, button, i,\nsection, img, div, h2, p, form,\nfieldset, label, input, textarea,\nspan, article, footer, time, small {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  outline: 0;\n  font: inherit;\n  color: inherit;\n  text-align: inherit;\n  text-decoration: inherit;\n  vertical-align: inherit;\n  box-sizing: inherit;\n  background: transparent;\n}\n\nbody {\n  font-family: \"Helvetica Neue, Helvetica, Liberation Sans, Arial, sans-serif\";\n}\n\nul {\n  list-style: none;\n}\n\nimg {\n  display: block;\n}\n\ninput[type=\"password\"],\ninput[type=\"email\"],\ninput[type=\"text\"],\ninput[type=\"submit\"],\ntextarea,\nbutton {\n  /*\n  Get rid of native styling. Read more here:\n  http://css-tricks.com/almanac/properties/a/appearance/\n  */\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n\nbutton,\ninput[type=\"submit\"] {\n  cursor: pointer;\n}\n\n/* Clearfix */\n.group:after {\n  content: \"\";\n  display: block;\n  clear: both;\n}\n\nbody {\n  font-family: 'Roboto Mono', monospace;\n}\n\n#root {\n  display: flex;\n  justify-content: center;\n}\n\n.data-selection-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  width: 1175px;\n  border: 1px solid black;\n  box-sizing: border-box;\n  padding: 20px;\n  height: 155px;\n}\n\n.data-selection-container .data-selector-schema-button-container {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n\n.data-selection-container .data-selector-schema-button-container .open-schema {\n  margin-right: 20px;\n  padding: 10px 20px;\n  background-color: #00ac16;\n  border-radius: 8px;\n}\n\n.data-selection-container .data-selector-schema-button-container .open-schema:hover {\n  cursor: pointer;\n  opacity: 0.8;\n}\n\n.data-selection-container .data-selection-area, .data-selection-container .description-area {\n  display: flex;\n}\n\n.data-selection-container .data-selection-area h4, .data-selection-container .description-area h4 {\n  margin: 0px;\n  padding: 10px 5px;\n  padding-left: 0px;\n  white-space: nowrap;\n}\n\n.data-selection-container .data-selection-area {\n  flex-direction: row;\n}\n\n.data-selection-container .description-area {\n  flex-direction: column;\n}\n\n.data-selection-container select {\n  font-family: 'Roboto Mono', monospace;\n  padding: 0px 5px;\n  height: auto;\n}\n\n.bar-chart-and-sidebar-container {\n  display: flex;\n  flex-direction: row;\n  width: 1175px;\n}\n\n.bar-chart-area {\n  display: block;\n  height: 600px;\n  width: 575px;\n  border: 1px solid black;\n  font-family: 'Roboto Mono', monospace;\n  font-weight: normal;\n  font-size: 1em;\n  box-sizing: border-box;\n}\n\n.axis {\n  font-size: 0.9em;\n  font-family: 'Roboto Mono', monospace;\n}\n\n.axis-label {\n  font-weight: normal;\n}\n\n.axis-x > g.tick > text {\n  font-weight: normal;\n}\n\n.axis-x > g.tick > text.active {\n  fill: #e81717;\n}\n\n.axis-x > g.tick > text:hover {\n  cursor: pointer;\n}\n\n.axis-x > g.tick > text.hovering-over {\n  fill: #e81717;\n}\n\n.chart-title {\n  font-weight: bold;\n}\n\n.chart-bar {\n  fill: #74d3eb;\n}\n\n.chart-bar.active {\n  fill: #17416e;\n}\n\n.chart-bar:hover {\n  cursor: pointer;\n}\n\n.chart-bar.hovering-over {\n  fill: #17416e;\n}\n\n.gridline > g.tick > line {\n  stroke: #ececed;\n  border: 0px 0px;\n}\n\n.sidebar-container {\n  box-sizing: border-box;\n  width: 600px;\n  height: 600px;\n  border: 1px solid black;\n}\n\n.sidebar-container .panels {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  list-style: none;\n}\n\n.sidebar-container .panels li {\n  font-size: 16px;\n  width: 50%;\n  padding-top: 15px;\n  padding-bottom: 15px;\n  border-bottom: 1px solid black;\n  text-align: center;\n}\n\n.sidebar-container .panels li:hover {\n  cursor: pointer;\n}\n\n.sidebar-container .panels li.left {\n  border-right: 1px solid black;\n}\n\n.sidebar-container .panels li.active {\n  border-bottom: none;\n}\n\n.sidebar-container .panels li.inactive {\n  background-color: #d5d0d0;\n}\n\n.sidebar-container p.no-selection {\n  padding: 20px 30px;\n}\n\n.sidebar-container .query-gist {\n  width: 100%;\n  height: -webkit-calc( 100% - 50px );\n  height: -moz-calc( 100% - 50px );\n  height: calc( 100% - 50px );\n  overflow-y: auto;\n  padding-top: 5px;\n}\n\n.sidebar-container .query-gist code {\n  height: 100%;\n  width: 100%;\n}\n\n.sidebar-container .query-gist .gist-file {\n  border-top: none;\n  border-bottom: none;\n}\n\n.donut-chart-title {\n  width: 100%;\n  text-align: center;\n  font-weight: bold;\n  padding-top: 30px;\n  font-size: 18px;\n}\n\n.donut-chart-container {\n  width: 600px;\n  height: 400px;\n}\n\n.donut-chart-container .donut-chart-center-text {\n  font-size: 20px;\n}\n\n.schema-gist-container {\n  width: 750px;\n  height: auto;\n  overflow-y: auto;\n}\n", ""]);
 
 // exports
 
