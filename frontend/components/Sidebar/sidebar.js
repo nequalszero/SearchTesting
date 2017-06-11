@@ -38,20 +38,23 @@ class Sidebar extends React.Component {
     })
 
     return (
-      <DonutChart className="donut-chart-container"
-        color={['#41B787', '#6352B9', '#B65480', '#D5735A']}
-        data={donutDataObjects}
-        displaySumInCenter={true}
-        displayLegend={true}
-        enable3D={true}
-        formatLabel={(time) => `${round(time, 2)}s`}
-        height={300}
-        labelKey='key'
-        labels={true}
-        translateX={30}
-        translateY={30}
-        valueKey='value'
-        width={300}/>
+      <div>
+        <p className="donut-chart-title">{this.props.queryKey}</p>
+        <DonutChart className="donut-chart-container"
+          color={['#41B787', '#6352B9', '#B65480', '#D5735A']}
+          data={donutDataObjects}
+          displaySumInCenter={true}
+          displayLegend={true}
+          enable3D={true}
+          formatLabel={(time) => `${round(time, 2)}s`}
+          height={300}
+          labelKey='key'
+          labels={true}
+          translateX={30}
+          translateY={30}
+          valueKey='value'
+          width={300}/>
+      </div>
     );
   }
 
@@ -77,11 +80,12 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
-  queryGistId: PropTypes.string,
-  benchmark: PropTypes.object,
   activePanel: PropTypes.string.isRequired,
+  benchmark: PropTypes.object,
   handlePanelSelect: PropTypes.func.isRequired,
-  transitioning: PropTypes.bool.isRequired
+  queryGistId: PropTypes.string,
+  queryKey: PropTypes.string,
+  transitioning: PropTypes.bool.isRequired,
 };
 
 export default Sidebar;

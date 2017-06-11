@@ -248,6 +248,14 @@ body {
   border-bottom: none;
 }
 
+.donut-chart-title {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 30px;
+  font-size: 18px;
+}
+
 .donut-chart-container {
   width: 600px;
   height: 400px;
