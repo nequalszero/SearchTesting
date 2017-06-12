@@ -15,7 +15,7 @@ const applicationData = {
     "realistic_product_search": {
       "details": {
         "queries": 1000,
-        "description": "The graph below shows the result of making 1000 queries using commonly paired keywords."
+        "description": "The graph below shows the result of making 1,000 queries using commonly paired keywords."
       },
       "benchmarks": [
         {
@@ -93,7 +93,7 @@ const applicationData = {
     "product_search": {
       "details": {
         "queries": 1000,
-        "description": "The graph below shows the result of making 1000 queries using the full keyword description of a random product."
+        "description": "The graph below shows the result of making 1,000 queries using the full keyword description of a random product."
       },
       "benchmarks": [
         {

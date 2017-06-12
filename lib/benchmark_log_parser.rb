@@ -1,5 +1,15 @@
 require 'set'
 
+# Inserts commas appropriately into an integer, does not account for negative values.
+def format_with_commas(integer)
+  integer.to_s
+         .split('')
+         .reverse
+         .map.with_index{ |char, idx| idx%3 == 0 && idx != 0 ? char + ',' : char }
+         .reverse
+         .join('');
+end
+
 def query_type_description(params)
   raise "Error in benchmark_log_parser.rb #query_type_description - params :queries key missing" unless params[:queries]
 
@@ -7,12 +17,12 @@ def query_type_description(params)
   when :random_keyword_search
     raise "Error in benchmark_log_parser.rb #query_type_description - params :keywords key missing" unless params[:keywords]
 
-    return "The graph below shows the result of making #{params[:queries]} queries of #{params[:keywords]} keywords each. The keywords were randomly selected from the tag_names table."
+    return "The graph below shows the result of making #{format_with_commas(params[:queries])} queries of #{params[:keywords]} keywords each. The keywords were randomly selected from the tag_names table."
   when :product_search
-    return "The graph below shows the result of making #{params[:queries]} queries using the full keyword description of a random product."
+    return "The graph below shows the result of making #{format_with_commas(params[:queries])} queries using the full keyword description of a random product."
 
   when :realistic_product_search
-    return "The graph below shows the result of making #{params[:queries]} queries using commonly paired keywords."
+    return "The graph below shows the result of making #{format_with_commas(params[:queries])} queries using commonly paired keywords."
 
   else
     raise "Error in benchmark_log_parser.rb #query_type_description - params :type key is missing/invalid"

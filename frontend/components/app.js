@@ -6,6 +6,7 @@ import DataSelectionArea from  './DataSelectionArea';
 import BarChart from './BarChart';
 import Sidebar from './Sidebar';
 import SchemaGistModal from './SchemaGistModal';
+import DatabaseInformationBar from './DatabaseInformationBar';
 
 // Function that processes the applicationData, extracting nested data objects.
 // Returns a dataKeys array and dataMap object that maps dataKeys to the data objects.
@@ -138,6 +139,7 @@ class App extends React.Component {
             <Sidebar {...this.state.sidebar}
               handlePanelSelect={(field) => this.selectSidebarPanel(field)}/>
           </div>
+          <DatabaseInformationBar {...applicationData.database_information.counts}/>
         </div>
         <SchemaGistModal onRequestClose={this.toggleSchemaGist}
           modalIsOpen={this.state.schemaGistOpen}

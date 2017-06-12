@@ -1,0 +1,37 @@
+.database-information-bar {
+  display: flex;
+  align-items: center;
+  width: $bar-chart-area-width + $sidebar-area-width;
+  border: 1px solid black;
+  box-sizing: border-box;
+  height: 63px;
+
+  .description {
+    font-weight: bold;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .table-name-container {
+    display: flex;
+    align-items: center;
+    padding-right: 25px;
+    padding-left: 25px;
+    height: 100%;
+
+    .table-name {
+      padding-right: 10px;
+    }
+
+    .num-rows {
+      span {
+        font-weight: bold;
+
+        &.first { color: red; }
+        &.second { color: blue; }
+        &.third { color: green; }
+      }
+    }
+  }
+
+}

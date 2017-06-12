@@ -270,3 +270,46 @@ body {
   height: auto;
   overflow-y: auto;
 }
+
+.database-information-bar {
+  display: flex;
+  align-items: center;
+  width: 1175px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  height: 63px;
+}
+
+.database-information-bar .description {
+  font-weight: bold;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.database-information-bar .table-name-container {
+  display: flex;
+  align-items: center;
+  padding-right: 25px;
+  padding-left: 25px;
+  height: 100%;
+}
+
+.database-information-bar .table-name-container .table-name {
+  padding-right: 10px;
+}
+
+.database-information-bar .table-name-container .num-rows span {
+  font-weight: bold;
+}
+
+.database-information-bar .table-name-container .num-rows span.first {
+  color: red;
+}
+
+.database-information-bar .table-name-container .num-rows span.second {
+  color: blue;
+}
+
+.database-information-bar .table-name-container .num-rows span.third {
+  color: green;
+}
