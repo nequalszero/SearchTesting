@@ -21,12 +21,12 @@ class DonutChartShadow extends React.Component {
                  .innerRadius(this.innerRadius);
 
     this.transform = `translate(${props.diameter/2}, ${props.diameter/2})`;
-    this.paths = this.createShadowPaths();
+    this.paths = this.createShadowPaths(props);
   }
 
-  createShadowPaths() {
-    return this.props.pie(this.props.data).map((value, idx) => {
-      let shadowColor = d3.hsl(this.props.color(idx));
+  createShadowPaths(props) {
+    return props.pie(props.data).map((value, idx) => {
+      let shadowColor = d3.hsl(props.color(idx));
       shadowColor = d3.hsl((shadowColor.h + 5), (shadowColor.s - 0.07), (shadowColor.l - 0.10));
 
       return (

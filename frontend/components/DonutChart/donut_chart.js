@@ -20,8 +20,19 @@ class DonutChart extends React.Component {
                    .range(this.props.color);
   }
 
+  // Only update if the data has changed.
   shouldComponentUpdate(nextProps) {
     return !isEqual(nextProps.data, this.props.data);
+  }
+
+  componentWillUpdate(nextProps) {
+    this.pie = d3.pie()
+                 .value((data) => (data[nextProps.valueKey]))
+                 .padAngle(nextProps.padAngle)
+                 .sort(null);
+
+    this.color = d3.scaleOrdinal()
+                   .range(nextProps.color);
   }
 
   constructShadow() {
