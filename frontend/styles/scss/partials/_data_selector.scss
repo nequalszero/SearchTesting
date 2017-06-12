@@ -8,20 +8,42 @@
   padding: 20px;
   height: 155px;
 
-  .data-selector-schema-button-container {
+  .data-selector-and-buttons-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    .open-schema {
-      margin-right: 20px;
-      padding: 10px 20px;
-      background-color: #00ac16;
-      border-radius: 8px;
+    .buttons-container {
+      display: flex;
+      justify-content: space-between;
+      width: 360px;
 
-      &:hover {
-        cursor: pointer;
-        opacity: 0.8;
+      .github-link {
+        background-color: black;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+
+        &:hover {
+          opacity: 0.8;
+          cursor: pointer;
+        }
+
+        .fa-github {
+          padding-right: 10px;
+        }
+      }
+
+      .open-schema {
+        margin-right: 20px;
+        padding: 10px 20px;
+        background-color: #00ac16;
+        border-radius: 8px;
+
+        &:hover {
+          cursor: pointer;
+          opacity: 0.8;
+        }
       }
     }
   }

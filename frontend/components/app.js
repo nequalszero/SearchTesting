@@ -1,7 +1,6 @@
 import React from 'react';
 
 import applicationData from '../../processed_data/results.js';
-import ColorBar from './D3Test/color_bar';
 import DataSelectionArea from  './DataSelectionArea';
 import BarChart from './BarChart';
 import Sidebar from './Sidebar';

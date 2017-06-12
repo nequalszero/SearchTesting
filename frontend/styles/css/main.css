@@ -76,20 +76,42 @@ body {
   height: 155px;
 }
 
-.data-selection-container .data-selector-schema-button-container {
+.data-selection-container .data-selector-and-buttons-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.data-selection-container .data-selector-schema-button-container .open-schema {
+.data-selection-container .data-selector-and-buttons-container .buttons-container {
+  display: flex;
+  justify-content: space-between;
+  width: 360px;
+}
+
+.data-selection-container .data-selector-and-buttons-container .buttons-container .github-link {
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.data-selection-container .data-selector-and-buttons-container .buttons-container .github-link:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.data-selection-container .data-selector-and-buttons-container .buttons-container .github-link .fa-github {
+  padding-right: 10px;
+}
+
+.data-selection-container .data-selector-and-buttons-container .buttons-container .open-schema {
   margin-right: 20px;
   padding: 10px 20px;
   background-color: #00ac16;
   border-radius: 8px;
 }
 
-.data-selection-container .data-selector-schema-button-container .open-schema:hover {
+.data-selection-container .data-selector-and-buttons-container .buttons-container .open-schema:hover {
   cursor: pointer;
   opacity: 0.8;
 }
