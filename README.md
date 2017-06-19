@@ -1,10 +1,14 @@
 # Search Testing
 
+Live Demo: https://nequalszero.github.io/SearchTesting
+
 This project tests the efficiency of searching a database for keywords/tags via traditional SQL relational tables versus NOSQL implementations doing sequential scans on a single table, examining array, hstore, and jsonb column data types.
 
 The database is seeded with fake outdoor industry products, with most products having 10-20 tags. The activerecord-import gem is used for batch insertion to speed up the seeding process.
 
 Note that the back end is completely separate from the front end in this project, and there are no Rails controllers.
+
+Additional details to be added for recent React/D3 integration.
 
 ## Goal
 
